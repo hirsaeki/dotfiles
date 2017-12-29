@@ -1,0 +1,13 @@
+BoldAsFont=yes
+Font=Inconsolata
+FontHeight=14
+CursorType=block
+Columns=120
+Rows=36
+Transparency=low
+CopyOnSelect=no
+CopyAsRTF=no
+Term=xterm-256color
+Locale=ja_JP
+Charset=UTF-8
+FontSmoothing=full

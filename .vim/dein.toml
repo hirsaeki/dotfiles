@@ -1,0 +1,35 @@
+[[plugins]]
+repo = 'Shougo/dein.vim'
+[[plugins]]
+repo = 'Shougo/vimproc.vim'
+build = 'make'
+[[plugins]]
+repo = 'Shougo/vimshell'
+[[plugins]]
+repo = 'Shougo/neocomplete.vim'
+[[plugins]]
+repo = 'Shougo/neosnippet.vim'
+[[plugins]]
+repo = 'Shougo/neosnippet-snippets'
+[[plugins]]
+repo ='Shougo/unite.vim'
+[[plugins]]
+repo = 'ujihisa/unite-colorscheme'
+[[plugins]]
+repo = 'taka-vagyok/term_forrest_cls.vim'
+[[plugins]]
+repo = 'altercation/vim-colors-solarized'
+[[plugins]]
+repo = 'tyru/eskk.vim'
+[[plugins]]
+repo = 'altercation/vim-colors-solarized'
+[[plugins]]
+repo = 'Shougo/context_filetype.vim'
+[[plugins]]
+repo = 'ujihisa/neco-look'
+[[plugins]]
+repo = 'pocke/neco-gh-issues'
+[[plugins]]
+repo = 'Shougo/neco-syntax'
+[[plugins]]
+repo = 'pearofducks/ansible-vim'
