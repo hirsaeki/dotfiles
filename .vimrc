@@ -75,7 +75,7 @@ set title
 " 画面を黒地に白にする (次行の先頭の " を削除すれば有効になる)
 "colorscheme evening " (Windows用gvim使用時はgvimrcを編集すること)
 "colorscheme koehler" (Windows用gvim使用時はgvimrcを編集すること)
-colorscheme ap_dark8" (Windows用gvim使用時はgvimrcを編集すること)
+"colorscheme ap_dark8" (Windows用gvim使用時はgvimrcを編集すること)
 
 "---------------------------------------------------------------------------
 " ファイル操作に関する設定:
@@ -367,8 +367,9 @@ let g:neosnippet#snippets_directory.=',' . '~/.vim/bundle/vim-snippets/snippets'
 " ======================
 " eskk settings ---
 " ======================
-
-exec 'source ' . '~/.vim/rc/plugins/azik.rc.vim'
+if filereadable('~/.vim/rc/plugins/azik.rc.vim')
+  exec 'source ' . '~/.vim/rc/plugins/azik.rc.vim'
+endif
 let g:eskk#large_dictionary = "~/SKK-JISYO.L"
 let g:eskk#enable_completion = 1
 let g:eskk#egg_like_newline = 1
@@ -380,9 +381,20 @@ let g:eskk#server = {
 
 filetype plugin indent on
 syntax on
+
+augroup TransparentBG
+  autocmd!
+  autocmd Colorscheme * highlight Normal ctermbg=none
+  autocmd Colorscheme * highlight NonText ctermbg=none
+  autocmd Colorscheme * highlight LineNr ctermbg=none
+  autocmd Colorscheme * highlight Folded ctermbg=none
+  autocmd Colorscheme * highlight EndOfBuffer ctermbg=none 
+augroup END
+
 colorscheme solarized
 if has('gui_running')
   set background=light
 else
   set background=dark
 endif
+	
