@@ -1,0 +1,49 @@
+[[plugins]]
+repo = 'Shougo/neocomplete.vim'
+if = "has('lua')"
+on_event = ['InsertEnter']
+hook_add = '''
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/neco.rc.vim'
+'''
+
+[[plugins]]
+repo = 'Shougo/deoplete.nvim'
+if = "has('nvim')"
+on_event = ['InsertEnter']
+hook_source = '''
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/deoplete.rc.vim'
+'''
+
+[[plugins]]
+repo = 'Shougo/neosnippet.vim'
+on_event = ['InsertEnter']
+on_ft = ['snippet']
+depends = ['neosnippet-snippets']
+hook_add = '''
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/neosnippet.rc.vim'
+'''
+
+[[plugins]]
+repo = 'ujihisa/neco-look'
+on_event = ['InsertEnter']
+
+[[plugins]]
+repo = 'pocke/neco-gh-issues'
+on_event = ['InsertEnter']
+
+[[plugins]]
+repo = 'Shougo/neco-syntax'
+on_event = ['InsertEnter']
+
+[[plugins]]
+repo = 'hirsaeki-mki/ansible-vim'
+on_event = ['InsertEnter']
+on_ft =['yaml.ansible']
+
+[[plugins]]
+repo = 'kana/vim-operator-user'
+on_event = ['InsertEnter']
+
+[[plugins]]
+repo = 'rhysd/vim-operator-surround'
+on_event = ['InsertEnter']

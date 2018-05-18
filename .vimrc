@@ -5,7 +5,10 @@ set fileencodings=iso-2022-jp,cp932,sjis,euc-jp,utf-8
 set fileformats=unix,mac,dos
 filetype off
 filetype plugin indent off
-
+" neovim のターミナル実行時の表示くずれ対応
+if !has('gui_running') && has('nvim')
+  set guicursor=
+end
 " 検索時に大文字小文字を無視 (noignorecase:無視しない)
 set ignorecase
 " 大文字小文字の両方が含まれている場合は大文字小文字を区別
@@ -99,7 +102,7 @@ endif
 
 "---------------------------------------------------------------------------
 " コンソールでのカラー表示のための設定(暫定的にUNIX専用)
-if has('unix') && !has('gui_running')
+if has('unix') && !has('gui_running') && !has('nvim')
   let uname = system('uname')
   if uname =~? "linux"
     set term=builtin_linux
@@ -258,25 +261,34 @@ augroup END
 " dein settings {{{
 " dein自体の自動インストール
 let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
-let s:dein_dir = s:cache_home . '/dein'
+let s:config_home = empty($XDG_CONFIG_HOME) ? expand('~/.config') : $XDG_CONFIG_HOME
+" 
+if v:version < 8.0 || ! has('nvim')
+  let s:dein_clone = 'git clone --depth=1 -b 1.5 https://github.com/Shougo/dein.vim '  
+else
+  let s:dein_clone = 'git clone https://github.com/Shougo/dein.vim '  
+endif
+if has('nyaovim')
+  let s:dein_dir = s:cache_home . '/nyaovim/dein'
+elseif has('nvim')
+  let s:dein_dir = s:cache_home . '/nvim/dein'
+else
+  let s:dein_dir = s:cache_home . '/vim/dein'
+endif
 let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 if !isdirectory(s:dein_repo_dir)
-  if v:version < 8.0 || ! has('nvim')
-    call system('git clone --depth=1 -b 1.5 https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
-  else
-    call system('git clone https://github.com/Shougo/dein.vim ' . shellescape(s:dein_repo_dir))
-  endif
+  call system(s:dein_clone . shellescape(s:dein_repo_dir))
 endif
 let &runtimepath = s:dein_repo_dir .",". &runtimepath
   " プラグイン読み込み＆キャッシュ作成
-if has('win32')
-  let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/vimfiles/dein.toml'
-else
-  let s:toml_file = fnamemodify(expand('<sfile>'), ':h').'/.vim/dein.toml'
-endif
+let s:toml_dir = s:config_home . '/dein.vim'
+let s:toml_file = s:toml_dir . '/dein.toml'
+let s:toml_lazy_file = s:toml_dir . '/dein_lazy.toml'
 if dein#load_state(s:dein_dir)
-  call dein#begin(s:dein_dir, [$MYVIMRC, s:toml_file])
-  call dein#load_toml(s:toml_file)
+  call dein#begin(s:dein_dir)
+  call dein#load_toml(s:toml_file, {'lazy' : 0})
+  call dein#load_toml(s:toml_lazy_file, {'lazy' : 1})
+
   call dein#end()
   call dein#save_state()
 endif
@@ -285,88 +297,6 @@ if has('vim_starting') && dein#check_install()
   call dein#install()
 endif
 " }}}
-
-"==========================================
-"neocomplete.vim
-"==========================================
-"use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 2
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-let g:neocomplete#enable_underbar_completion = 1
-let g:neocomplete#enable_camel_case_completion  =  1
-let g:neocomplete#max_keyword_width = 10000
-let g:neocomplete#auto_completion_start_length = 2
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'scheme' : $HOME.'/.gosh_completions'
-      \ }
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-  let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-" Define text-type
-if !exists('g:neocomplete#text_mode_filetypes')
-  let g:neocomplete#text_mode_filetype = {}
-endif
-let g:neocomplete#text_mode_filetypes = {
-      \ 'javascript': 1,
-      \ 'gitrebase': 1,
-      \ 'gitcommit': 1,
-      \ 'text': 1,
-      \ 'java': 1,
-      \}
-
-" Plugin key-mappings.
-inoremap <expr><C-g>  neocomplete#undo_completion()
-inoremap <expr><C-l>  neocomplete#complete_common_string()
-inoremap <expr><CR>   pumvisible() ? neocomplete#close_popup()  : "<CR>"
-
-let s:neco_dicts_dir = $HOME . '/dicts'
-if isdirectory(s:neco_dicts_dir)
-  let g:neocomplete#sources#dictionary#dictionaries ={
-  \   
-  \ }
-endif
-let g:neocomplete#data_directory = '~/.vim/cache/neocomplete'
- 
-" ======================
-" neosnippet settings ---
-" ======================
-"http://kazuph.hateblo.jp/entry/2013/01/19/193745
-
-" <TAB>: completion.
-inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
-
-" Plugin key-mappings.
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
-xmap <C-k> <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
-
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-let g:neosnippet#snippets_directory='~/dotfiles/snippets'
-let g:neosnippet#snippets_directory.=',' . '~/.vim/bundle/vim-snippets/snippets'
 
 " ======================
 " eskk settings ---
