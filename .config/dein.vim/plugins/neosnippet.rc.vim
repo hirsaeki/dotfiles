@@ -23,4 +23,5 @@ endif
 " Enable snipMate compatibility feature.
 let g:neosnippet#enable_snipmate_compatibility = 1
 let g:neosnippet#snippets_directory='~/dotfiles/snippets'
-let g:neosnippet#snippets_directory.=',' . '~/.vim/bundle/vim-snippets/snippets'
+let g:neosnippet#snippets_directory.=',' . dein#get('vim-snippets')["path"] . '/snippets'
+let g:neosnippet#snippets_directory.=',' . dein#get('ansible-vim')["path"] . '/snippets'
