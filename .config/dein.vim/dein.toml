@@ -28,3 +28,6 @@ repo = 'Shougo/context_filetype.vim'
 
 [[plugins]]
 repo = 'Shougo/neosnippet-snippets'
+
+[[plugins]]
+repo = 'hirsaeki-mki/ansible-vim'

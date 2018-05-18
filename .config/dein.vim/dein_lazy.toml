@@ -36,11 +36,6 @@ repo = 'Shougo/neco-syntax'
 on_event = ['InsertEnter']
 
 [[plugins]]
-repo = 'hirsaeki-mki/ansible-vim'
-on_event = ['InsertEnter']
-on_ft =['yaml.ansible']
-
-[[plugins]]
 repo = 'kana/vim-operator-user'
 on_event = ['InsertEnter']
 
