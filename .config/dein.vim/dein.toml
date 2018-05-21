@@ -4,7 +4,7 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
 hook_post_update = '''
-  source s:toml_dir . '/plugins/vimproc_post_update.rc.vim'
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/vimproc_post_update.rc.vim'
 '''
 
 [[plugins]]
@@ -34,3 +34,6 @@ repo = 'honza/vim-snippets'
 
 [[plugins]]
 repo = 'hirsaeki-mki/ansible-vim'
+
+[[plugins]]
+repo = 'kana/vim-operator-user'
