@@ -86,11 +86,19 @@ set title
 " バックアップファイルを作成しない (次行の先頭の " を削除すれば有効になる)
 "set nobackup
 " バックアップファイルを環境変数TMPで指定されたディレクトリに作成
-set backupdir=$TMP
+
+let &backupdir=$HOME . '/.vimbackup'
+call system('mkdir -p ' . shellescape(&backupdir))
 " バックアップファイルの拡張子を.bakに設定
 set backupext=.bak
-" スワップファイルを環境変数TMPで指定されたディレクトリに作成
-set directory=$TMP
+" スワップファイルの置き場所作成
+set directory=&backupdir
+
+" アンドゥファイルの置き場所作成
+let &undodir=$HOME . '/.vimundo'
+call system('mkdir -p '. shellescape(&undodir))
+
+set undofile
 "---------------------------------------------------------------------------
 " ファイル名に大文字小文字の区別がないシステム用の設定:
 "   (例: DOS/Windows/MacOS)

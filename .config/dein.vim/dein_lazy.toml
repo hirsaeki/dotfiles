@@ -1,6 +1,6 @@
 [[plugins]]
 repo = 'Shougo/neocomplete.vim'
-if = "has('lua')"
+if = "has('lua') && v:version < 800 && !has('nvim')"
 on_event = ['InsertEnter']
 hook_add = '''
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/neco.rc.vim'
@@ -8,7 +8,7 @@ hook_add = '''
 
 [[plugins]]
 repo = 'Shougo/deoplete.nvim'
-if = "has('nvim')"
+if = "has('python3') && (v:version >= 800 || has('nvim'))"
 on_event = ['InsertEnter']
 hook_source = '''
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/deoplete.rc.vim'
