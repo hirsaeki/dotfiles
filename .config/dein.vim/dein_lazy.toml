@@ -38,7 +38,7 @@ on_event = ['InsertEnter']
 [[plugins]]
 repo = 'rhysd/vim-operator-surround'
 on_map = {n = '<Plug>'}
-hook_add= '''n 
+hook_add= '''
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/vim-operator-surround.rc.vim'
 '''
 
