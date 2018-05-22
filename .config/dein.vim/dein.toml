@@ -12,7 +12,11 @@ repo = 'Shougo/vimshell'
 if = "!has('nvim')"
 
 [[plugins]]
-repo ='Shougo/unite.vim'
+repo ='Shougo/denite.nvim'
+if = "has('python3')"
+hook_post_source= '''
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/denite.rc.vim'
+'''
 
 [[plugins]]
 repo = 'ujihisa/unite-colorscheme'

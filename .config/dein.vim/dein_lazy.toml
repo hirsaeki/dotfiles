@@ -38,6 +38,18 @@ on_event = ['InsertEnter']
 [[plugins]]
 repo = 'rhysd/vim-operator-surround'
 on_map = {n = '<Plug>'}
-hook_add= '''
+hook_add= '''n 
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/vim-operator-surround.rc.vim'
+'''
+
+[[plugins]]
+repo = 'zchee/deoplete-jedi'
+on_ft = 'python'
+depends = ['deoplete.nvim']
+
+[[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = 'python'
+hook_source = '''
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/jedi-vim.rc.vim'
 '''
