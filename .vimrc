@@ -92,7 +92,7 @@ call system('mkdir -p ' . shellescape(&backupdir))
 " バックアップファイルの拡張子を.bakに設定
 set backupext=.bak
 " スワップファイルの置き場所作成
-set directory=&backupdir
+let &directory=&backupdir
 
 " アンドゥファイルの置き場所作成
 let &undodir=$HOME . '/.vimundo'
