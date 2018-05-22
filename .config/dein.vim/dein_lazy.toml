@@ -55,6 +55,9 @@ if = "has('python3')"
 hook_source = '''
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/jedi-vim.rc.vim'
 '''
+hook_post_update = '''
+  git submodule update --init
+'''
 
 [[plugins]]
 repo = 'davidhalter/jedi-vim'

@@ -1,8 +1,7 @@
 autocmd FileType python setlocal completeopt-=preview
 autocmd FileType python setlocal omnifunc=jedi#completions
 
-let g:jedi#auto_initialization = 0
-let g:jedi#auto_initialization    = 0 " Disable the default initialization routine
+let g:jedi#auto_initialization    = 1 " Disable the default initialization routine
 let g:jedi#auto_vim_configuration = 0 " Don't change 'completeopt'
 let g:jedi#popup_on_dot           = 0 " Manually press the completion key
 let g:jedi#popup_select_first     = 0 " Don't select first completion entry

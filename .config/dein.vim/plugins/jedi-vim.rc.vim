@@ -1,4 +1,6 @@
-let g:jedi#auto_initialization = 0
+autocmd FileType python setlocal completeopt-=preview
+
+let g:jedi#auto_initialization = 1
 let g:jedi#auto_vim_configuration = 0
 let g:jedi#smart_auto_mappings = 0
 let g:jedi#completions_enabled = 0
