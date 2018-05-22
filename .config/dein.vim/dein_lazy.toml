@@ -45,11 +45,21 @@ hook_add= '''
 [[plugins]]
 repo = 'zchee/deoplete-jedi'
 on_ft = 'python'
+if = "has('nvim')"
 depends = ['deoplete.nvim']
 
 [[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = 'python'
+if = "has('python3')"
 hook_source = '''
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/jedi-vim.rc.vim'
+'''
+
+[[plugins]]
+repo = 'davidhalter/jedi-vim'
+on_ft = 'python'
+if = "!has('python3')"
+hook_source = '''
+  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/jedi-vim_vim8.rc.vim'
 '''
