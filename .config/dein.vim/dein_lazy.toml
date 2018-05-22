@@ -59,7 +59,10 @@ hook_source = '''
 [[plugins]]
 repo = 'davidhalter/jedi-vim'
 on_ft = 'python'
-if = "!has('python3')"
+if = "!has('python3') && has('python') && has('lua')"
 hook_source = '''
   execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/jedi-vim_vim8.rc.vim'
+'''
+hook_post_update = '''
+  git submodule update --init
 '''
