@@ -1,4 +1,6 @@
-source ~/git_repos/mintty-colors-solarized/sol.dark
-eval $(dircolors ~/git_repos/dircolors-solarized/dircolors.ansi-dark)
+if [ "$MSYSCON" == "mintty.exe" ]
+  [ ! -e .sol_dark_mintty ] && wget -O ${HOME}/.sol_dark_mintty https://raw.githubusercontent.com/mavnn/mintty-colors-solarized/master/sol.dark
+  source ${HOME}/.sol_dark_mintty
+fi
 alias ls="ls --color=auto"
 cd ~
