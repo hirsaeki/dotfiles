@@ -15,6 +15,16 @@ hook_source = '''
 '''
 
 [[plugins]]
+repo = 'roxma/nvim-yarp'
+if = "has('python3') && (v:version >= 800 || has('nvim'))"
+on_event = ['InsertEnter']
+
+[[plugins]]
+repo = 'roxma/vim-hug-neovim-rpc'
+if = "has('python3') && (v:version >= 800 || has('nvim'))"
+on_event = ['InsertEnter']
+
+[[plugins]]
 repo = 'Shougo/neosnippet.vim'
 on_event = ['InsertEnter']
 on_ft = ['snippet']
