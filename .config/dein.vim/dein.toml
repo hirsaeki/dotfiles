@@ -2,12 +2,6 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo = 'Shougo/vimproc.vim'
-hook_post_update = '''
-  execute 'source ' . g:toml_dir . '/plugins/vimproc_post_update.rc.vim'
-'''
-
-[[plugins]]
 repo = 'Shougo/vimshell'
 if = "!has('nvim')"
 

@@ -1,4 +1,8 @@
 [[plugins]]
+repo = 'Shougo/vimproc.vim'
+build = 'make'
+
+[[plugins]]
 repo = 'Shougo/neocomplete.vim'
 if = "has('lua') && (v:version < 800 && !has('nvim') || !has('python3'))"
 on_event = ['InsertEnter']
@@ -66,7 +70,7 @@ hook_source = '''
   execute 'source ' . g:toml_dir . '/plugins/jedi-vim.rc.vim'
 '''
 hook_post_update = '''
-  git submodule update --init
+  call system('git submodule update --init')
 '''
 
 [[plugins]]

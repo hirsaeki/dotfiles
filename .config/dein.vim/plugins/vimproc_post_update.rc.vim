@@ -1,4 +1,5 @@
-if dein#util#_is_windows() 'tools\\update-dll-mingw'
+if dein#util#_is_windows()
+  let cmd = 'tools\\update-dll-mingw'
 elseif dein#util#_is_cygwin()
   let cmd = 'make -f make_cygwin.mak'
 elseif executable('gmake')
