@@ -289,9 +289,9 @@ if !isdirectory(s:dein_repo_dir)
 endif
 let &runtimepath = s:dein_repo_dir .",". &runtimepath
   " プラグイン読み込み＆キャッシュ作成
-let s:toml_dir = s:config_home . '/dein.vim'
-let s:toml_file = s:toml_dir . '/dein.toml'
-let s:toml_lazy_file = s:toml_dir . '/dein_lazy.toml'
+let g:toml_dir = s:config_home . '/dein.vim'
+let s:toml_file = g:toml_dir . '/dein.toml'
+let s:toml_lazy_file = g:toml_dir . '/dein_lazy.toml'
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
   call dein#load_toml(s:toml_file, {'lazy' : 0})
@@ -321,9 +321,6 @@ let g:eskk#server = {
 \ 'port': 1178,
 \}
 
-filetype plugin indent on
-syntax on
-
 augroup TransparentBG
   autocmd!
   autocmd Colorscheme * highlight Normal ctermbg=none
@@ -333,9 +330,21 @@ augroup TransparentBG
   autocmd Colorscheme * highlight EndOfBuffer ctermbg=none 
 augroup END
 
-colorscheme solarized
-if has('gui_running')
-  set background=light
+if has('win32') && !has('gui_running') 
+  colorscheme ap_dark8
+  hi Visual ctermfg=7 ctermbg=12
+  hi LineNr ctermfg=9
+  hi Pmenu  ctermfg=0 ctermbg=9
+  hi Folded ctermfg=10
 else
-  set background=dark
+  let g:solarized_contrast = 'high'
+  colorscheme solarized
+  if has('gui_running')
+    set background=light
+  else
+    set background=dark
+  endif
 endif
+
+filetype plugin indent on
+syntax on

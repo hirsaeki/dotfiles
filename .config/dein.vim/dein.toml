@@ -4,7 +4,7 @@ repo = 'Shougo/dein.vim'
 [[plugins]]
 repo = 'Shougo/vimproc.vim'
 hook_post_update = '''
-  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/vimproc_post_update.rc.vim'
+  execute 'source ' . g:toml_dir . '/plugins/vimproc_post_update.rc.vim'
 '''
 
 [[plugins]]
@@ -15,7 +15,20 @@ if = "!has('nvim')"
 repo ='Shougo/denite.nvim'
 if = "has('python3')"
 hook_post_source= '''
-  execute 'source ' . fnamemodify(g:dein#_vimrcs[1], ':h') . '/plugins/denite.rc.vim'
+  execute 'source ' . g:toml_dir . '/plugins/denite.rc.vim'
+'''
+
+[[plugins]]
+repo = 'itchyny/lightline.vim'
+hook_add = '''
+  execute 'source ' . g:toml_dir . '/plugins/lightline.rc.vim'
+'''
+
+[[plugins]]
+repo = 'airblade/vim-gitgutter'
+depends = ['dein.vim']
+hook_add = '''
+  execute 'source ' . g:toml_dir . '/plugins/vim-gitgutter.rc.vim'
 '''
 
 [[plugins]]
