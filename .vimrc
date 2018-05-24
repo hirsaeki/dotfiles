@@ -271,7 +271,7 @@ augroup END
 let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
 let s:config_home = empty($XDG_CONFIG_HOME) ? expand('~/.config') : $XDG_CONFIG_HOME
 " 
-if v:version < 8.0 || ! has('nvim')
+if v:version < 800 || ! has('nvim')
   let s:dein_clone = 'git clone --depth=1 -b 1.5 https://github.com/Shougo/dein.vim '  
 else
   let s:dein_clone = 'git clone https://github.com/Shougo/dein.vim '  
@@ -346,5 +346,8 @@ else
   endif
 endif
 
+if !has('nvim')
+  let g:python3_host_prog = expand(system('which python3')[:-2])
+endif
 filetype plugin indent on
 syntax on
