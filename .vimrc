@@ -1,6 +1,7 @@
 " vim:set ts=8 sts=2 sw=2 tw=0: (この行に関しては:help modelineを参照)
 "---------------------------------------------------------------------------
 set encoding=utf-8
+scriptencoding utf-8
 set fileencodings=iso-2022-jp,cp932,sjis,euc-jp,utf-8
 set fileformats=unix,mac,dos
 filetype off
@@ -348,6 +349,9 @@ endif
 
 if !has('nvim')
   let g:python3_host_prog = expand(system('which python3')[:-2])
+  let g:python2_host_prog = expand(system('which python2')[:-2])
 endif
+
 filetype plugin indent on
+
 syntax on

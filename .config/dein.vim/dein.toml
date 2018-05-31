@@ -48,3 +48,19 @@ repo = 'hirsaeki-mki/ansible-vim'
 
 [[plugins]]
 repo = 'kana/vim-operator-user'
+
+[[plugins]]
+repo = 'kannokanno/previm'
+hook_add = '''
+  let g:previm_open_cmd = 'firefox'
+  augroup PrevimSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
+  augroup END
+'''
+
+[[plugins]]
+repo = 'tpope/vim-markdown'
+
+[[plugins]]
+repo = 'vim-scripts/fcitx.vim'
