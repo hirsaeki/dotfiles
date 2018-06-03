@@ -1,6 +1,8 @@
-if [ "$MSYSCON" == "mintty.exe" ]; then
-  [ ! -e .sol_dark_mintty ] && wget -O ${HOME}/.sol_dark_mintty https://raw.githubusercontent.com/mavnn/mintty-colors-solarized/master/sol.dark
-  source ${HOME}/.sol_dark_mintty
+if [ "$MSYSCON" == "mintty.exe" ] || grep -s Microsoft /proc/version; then
+  [ ! -e ${HOME}/.sol_dark_mintty ] && wget -O ${HOME}/.sol_dark_mintty https://raw.githubusercontent.com/mavnn/mintty-colors-solarized/master/sol.dark
+  . ~/.sol_dark_mintty
 fi
+[ ! -e ${HOME}/.dircolors.ansi-dark ] && wget -O ${HOME}/.dircolors.ansi-dark https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.ansi-dark
+eval $(dircolors ${HOME}/.dircolors.ansi-dark)
 alias ls="ls --color=auto"
 cd ~
