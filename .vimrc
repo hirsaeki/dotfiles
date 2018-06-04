@@ -331,6 +331,17 @@ augroup TransparentBG
   autocmd Colorscheme * highlight EndOfBuffer ctermbg=none 
 augroup END
 
+augroup vimrc-auto-mkdir  " {{{
+  autocmd!
+  autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
+  function! s:auto_mkdir(dir, force)  " {{{
+    if !isdirectory(a:dir) && (a:force ||
+    \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
+      call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+    endif
+  endfunction  " }}}
+
+augroup END  " }}}
 if has('win32') && !has('gui_running') 
   colorscheme ap_dark8
   hi Visual ctermfg=7 ctermbg=12

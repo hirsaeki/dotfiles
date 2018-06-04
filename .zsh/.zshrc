@@ -39,3 +39,5 @@ SAVEHIST=10000            # 保存されるヒストリの件数
 alias ls="ls --color"
 alias ll="ls -lh"
 alias vi="nvim"
+
+stty stop undef

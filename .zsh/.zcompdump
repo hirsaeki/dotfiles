@@ -1,4 +1,4 @@
-#files: 805	version: 5.1.1
+#files: 769	version: 5.1.1
 
 _comps=(
 '-' '_precommand'
@@ -1344,7 +1344,6 @@ _comps=(
 'zmv' '_zmv'
 'zone' '_hosts'
 'zoneadm' '_zoneadm'
-'zplug' '_zplug'
 'zpool' '_zpool'
 'zpty' '_zpty'
 'zsetattr' '_zattr'
@@ -1614,9 +1613,8 @@ autoload -Uz _SUSEconfig _a2ps _a2utils _aap _acpi \
             _zattr _zcalc _zcalc_line _zcat _zcompile \
             _zdump _zed _zfs _zfs_dataset _zfs_keysource_props \
             _zfs_pool _zftp _zip _zle _zlogin \
-            _zmodload _zmv _zoneadm _zones _zplug \
-            _zpool _zpty _zsh-mime-handler _zstyle _ztodo \
-            _zypper
+            _zmodload _zmv _zoneadm _zones _zpool \
+            _zpty _zsh-mime-handler _zstyle _ztodo _zypper
 autoload -Uz +X _call_program
 
 typeset -gUa _comp_assocs
