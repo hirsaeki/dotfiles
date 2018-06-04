@@ -20,6 +20,7 @@ export SYSTEMD_PAGER=less
 
 # User specific aliases and functions
 [ -e ${HOME}/.dircolors.ansi-dark ] && eval $(dircolors ${HOME}/.dircolors.ansi-dark)
+[ -e ~/.sol_dark_mintty ] && . ~/.sol_dark_mintty
 alias vi='nvim'
 alias ansible-playbook='env LANG=en_US.UTF-8 ansible-playbook'
 alias ls="ls --color"
