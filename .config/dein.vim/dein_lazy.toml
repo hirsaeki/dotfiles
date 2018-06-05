@@ -32,8 +32,8 @@ on_event = ['InsertEnter']
 repo = 'Shougo/neosnippet.vim'
 on_event = ['InsertEnter']
 on_ft = ['snippet']
-depends = ['neosnippet-snippets']
-hook_add = '''
+depends = ['neosnippet-snippets', 'context_filetype.vim']
+hook_source = '''
   execute 'source ' . g:toml_dir . '/plugins/neosnippet.rc.vim'
 '''
 
