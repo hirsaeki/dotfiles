@@ -1,1 +1,0 @@
-[ -e ~/.profile ] && . ~/.profile
