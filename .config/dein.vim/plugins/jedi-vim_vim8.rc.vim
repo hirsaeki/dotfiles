@@ -1,5 +1,10 @@
-autocmd FileType python setlocal completeopt-=preview
-autocmd FileType python setlocal omnifunc=jedi#completions
+set encoding=utf-8
+scriptencoding utf-8
+augroup FileEncoding
+  autocmd!
+  autocmd FileType python setlocal completeopt-=preview
+  autocmd FileType python setlocal omnifunc=jedi#completions
+augroup END
 
 let g:jedi#auto_initialization    = 1 " Disable the default initialization routine
 let g:jedi#auto_vim_configuration = 0 " Don't change 'completeopt'
@@ -13,4 +18,4 @@ if !exists('g:neocomplete#force_omni_input_patterns')
 endif
 
 let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-let g:jedi#goto_command = "<Leader>d"
+let g:jedi#goto_command = '<Leader>d'

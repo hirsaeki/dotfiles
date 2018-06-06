@@ -1,11 +1,10 @@
-" vim:set ts=8 sts=2 sw=2 tw=0: (この行に関しては:help modelineを参照)
-"---------------------------------------------------------------------------
 set encoding=utf-8
 scriptencoding utf-8
+" vim:set ts=8 sts=2 sw=2 tw=0: (この行に関しては:help modelineを参照)
+"---------------------------------------------------------------------------
+
 set fileencodings=iso-2022-jp,cp932,sjis,euc-jp,utf-8
 set fileformats=unix,mac,dos
-filetype off
-filetype plugin indent off
 " neovim のターミナル実行時の表示くずれ対応
 if !has('gui_running') && has('nvim')
   set guicursor=
@@ -15,8 +14,8 @@ set ignorecase
 " 大文字小文字の両方が含まれている場合は大文字小文字を区別
 set smartcase
 
-if $TMP == ""
-  let $TMP = "/tmp"
+if $TMP ==# ''
+  let $TMP = '/tmp'
 endif
 
 "---------------------------------------------------------------------------
@@ -26,7 +25,7 @@ endif
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
-set modelines=0
+set modelines=5
 " タブをスペースに展開しない (expandtab:展開する)
 set expandtab
 " インデントはスマートインデント
@@ -45,8 +44,6 @@ set wildmenu
 set wildmode=list:longest
 " テキスト挿入中の自動折り返しを日本語に対応させる
 set formatoptions+=mM
-" 日本語整形スクリプト(by. 西岡拓洋さん)用の設定
-let format_allow_over_tw = 1	" ぶら下り可能幅
 " 選択した文字をクリップボードに入れる
 set clipboard=unnamed
 " 保存していなくても別のファイルを表示できるようにする
@@ -56,7 +53,6 @@ set autoread
 
 "---------------------------------------------------------------------------
 " GUI固有ではない画面表示の設定:
-"
 " 行番号を非表示 (number:表示)
 set number
 " ルーラーを表示 (noruler:非表示)
@@ -76,11 +72,6 @@ set cmdheight=1
 set showcmd
 " タイトルを表示
 set title
-" 画面を黒地に白にする (次行の先頭の " を削除すれば有効になる)
-"colorscheme evening " (Windows用gvim使用時はgvimrcを編集すること)
-"colorscheme koehler" (Windows用gvim使用時はgvimrcを編集すること)
-"colorscheme ap_dark8" (Windows用gvim使用時はgvimrcを編集すること)
-
 "---------------------------------------------------------------------------
 " ファイル操作に関する設定:
 "
@@ -111,18 +102,18 @@ endif
 
 "---------------------------------------------------------------------------
 " コンソールでのカラー表示のための設定(暫定的にUNIX専用)
-if has('unix') && !has('gui_running') && !has('nvim')
-  let uname = system('uname')
-  if uname =~? "linux"
+if has('unix') && !has('gui_uunning') && !has('nvim')
+  let s:uname = system('uname')
+  if s:uname =~? 'linux'
     set term=builtin_linux
-  elseif uname =~? "freebsd"
+  elseif s:uname =~? 'freebsd'
     set term=builtin_cons25
-  elseif uname =~? "Darwin"
+  elseif s:uname =~? 'Darwin'
     set term=beos-ansi
   else
     set term=builtin_xterm
   endif
-  unlet uname
+  unlet s:uname
 endif
 
 "---------------------------------------------------------------------------
@@ -164,11 +155,14 @@ nmap g# g#zz
 
 "---------------------------------------------------------------------------
 " 文字コード設定
-autocmd FileType cvs    :set fileencoding=euc-jp
-autocmd FileType svn    :set fileencoding=utf-8
-autocmd FileType ruby   :set fileencoding=utf-8
-autocmd FileType eruby  :set fileencoding=utf-8
-autocmd FileType python :set fileencoding=utf-8
+augroup FileEncoding
+  autocmd!
+  autocmd FileType cvs    :set fileencoding=euc-jp
+  autocmd FileType svn    :set fileencoding=utf-8
+  autocmd FileType ruby   :set fileencoding=utf-8
+  autocmd FileType eruby  :set fileencoding=utf-8
+  autocmd FileType python :set fileencoding=utf-8
+augroup END
 
 "---------------------------------------------------------------------------
 " コマンドラインでのキーバインドを Emacs スタイルにする
@@ -257,10 +251,6 @@ set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 "--------------------------------------------------------------
 
-if !&compatible
-  set nocompatible
-endif
-
 " reset augroup
 augroup MyAutoCmd
   autocmd!
@@ -288,7 +278,7 @@ let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
 if !isdirectory(s:dein_repo_dir)
   call system(s:dein_clone . shellescape(s:dein_repo_dir))
 endif
-let &runtimepath = s:dein_repo_dir .",". &runtimepath
+let &runtimepath = s:dein_repo_dir .','. &runtimepath
   " プラグイン読み込み＆キャッシュ作成
 let g:toml_dir = s:config_home . '/dein.vim'
 let s:toml_file = g:toml_dir . '/dein.toml'
@@ -313,7 +303,7 @@ endif
 if filereadable('~/.vim/rc/plugins/azik.rc.vim')
   exec 'source ' . '~/.vim/rc/plugins/azik.rc.vim'
 endif
-let g:eskk#large_dictionary = "~/SKK-JISYO.L"
+let g:eskk#large_dictionary = '~/SKK-JISYO.L'
 let g:eskk#enable_completion = 1
 let g:eskk#egg_like_newline = 1
 let g:eskk#log_file_level = 4
@@ -340,8 +330,8 @@ augroup vimrc-auto-mkdir  " {{{
       call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
     endif
   endfunction  " }}}
-
 augroup END  " }}}
+
 if has('win32') && !has('gui_running') 
   colorscheme ap_dark8
   hi Visual ctermfg=7 ctermbg=12
@@ -364,5 +354,4 @@ if !has('nvim')
 endif
 
 filetype plugin indent on
-
 syntax on

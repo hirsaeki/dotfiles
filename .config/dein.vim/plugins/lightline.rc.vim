@@ -21,31 +21,31 @@ let g:lightline = {
         \ }
 
 function! LightlineModified()
-  return &ft =~ 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+  return &filetype =~? 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'
 endfunction
 
 function! LightlineReadonly()
-  return &ft !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
+  return &filetype !~? 'help\|vimfiler\|gundo' && &readonly ? 'x' : ''
 endfunction
 
 function! LightlineFilename()
-  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
-        \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
-        \  &ft == 'unite' ? unite#get_status_string() :
-        \  &ft == 'vimshell' ? vimshell#get_status_string() :
-        \ '' != expand('%:t') ? expand('%:t') : '[No Name]') .
-        \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+  return ('' !=? LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+        \ (&filetype ==? 'vimfiler' ? vimfiler#get_status_string() :
+        \  &filetype ==? 'unite' ? unite#get_status_string() :
+        \  &filetype ==? 'vimshell' ? vimshell#get_status_string() :
+        \ '' !=? expand('%:t') ? expand('%:t') : '[No Name]') .
+        \ ('' !=? LightlineModified() ? ' ' . LightlineModified() : '')
 endfunction
 
 function! LightlineFilepath()
-  return (&ft == 'vimfiler' ? '' :
-        \  &ft == 'unite' ? '':
-        \  &ft == 'vimshell' ? '':
-        \ '' != expand('%:h') ? expand('%:h') : '')
+  return (&filetype ==? 'vimfiler' ? '' :
+        \  &filetype ==? 'unite' ? '':
+        \  &filetype ==? 'vimshell' ? '':
+        \ '' !=? expand('%:h') ? expand('%:h') : '')
 endfunction
 
 function! LightlineFugitive()
-  if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
+  if &filetype !~? 'vimfiler\|gundo' && exists('*fugitive#head')
     return fugitive#head()
   else
     return ''
@@ -61,7 +61,7 @@ function! LightlineFiletype()
 endfunction
 
 function! LightlineFileencoding()
-  return winwidth(0) > 70 ? (&fenc !=# '' ? &fenc : &enc) : ''
+  return winwidth(0) > 70 ? (&fileencoding !=# '' ? &fileencoding : &encoding) : ''
 endfunction
 
 function! LightlineMode()

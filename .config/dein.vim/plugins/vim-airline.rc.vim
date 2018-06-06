@@ -1,3 +1,6 @@
+set encoding=utf-8
+scriptencoding utf-8
+
 set laststatus=2
 " モードの表示名を定義(デフォルトだと長くて横幅を圧迫するので略称にしている)
 let g:airline_mode_map = {

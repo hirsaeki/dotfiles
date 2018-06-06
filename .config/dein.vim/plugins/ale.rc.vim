@@ -1,3 +1,6 @@
+set encoding utf-8
+scriptencoding utf-8
+
 " エラー行に表示するマーク
 let g:ale_sign_error = '⨉'
 let g:ale_sign_warning = '⚠'

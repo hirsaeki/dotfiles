@@ -1,3 +1,6 @@
+set encoding=utf-8
+scriptencoding utf-8
+
 " vimprocで非同期実行
 " 成功時にバッファ、失敗時にQuickFixで表示
 " 結果表示のサイズ調整など
