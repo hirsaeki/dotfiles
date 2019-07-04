@@ -41,7 +41,7 @@ function! LightlineFilepath()
   return (&filetype ==? 'vimfiler' ? '' :
         \  &filetype ==? 'unite' ? '':
         \  &filetype ==? 'vimshell' ? '':
-        \ '' !=? expand('%:h') ? expand('%:h') : '')
+        \ '' !=? expand('%:h') ? pathshorten(expand('%:h')) : '')
 endfunction
 
 function! LightlineFugitive()
