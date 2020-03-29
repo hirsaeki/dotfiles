@@ -2,14 +2,11 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo = 'Shougo/vimshell'
-if = "!has('nvim')"
-
-[[plugins]]
-repo ='Shougo/denite.nvim'
-if = "has('python3')"
-hook_post_source= '''
-  execute 'source ' . g:toml_dir . '/plugins/denite.rc.vim'
+repo ='scrooloose/nerdtree'
+hook_add = '''
+  let g:NERDTreeShowHidden=1
+  let g:NERDTreeIgnore=['\.pyc$', '__pycache__']
+  nnoremap <silent><C-n> :NERDTreeToggle<CR>
 '''
 
 [[plugins]]
@@ -19,48 +16,65 @@ hook_add = '''
 '''
 
 [[plugins]]
-repo = 'airblade/vim-gitgutter'
-depends = ['dein.vim']
-hook_add = '''
-  execute 'source ' . g:toml_dir . '/plugins/vim-gitgutter.rc.vim'
-'''
-
-[[plugins]]
-repo = 'ujihisa/unite-colorscheme'
-
-[[plugins]]
-repo = 'taka-vagyok/term_forrest_cls.vim'
-
-[[plugins]]
 repo = 'altercation/vim-colors-solarized'
-
-[[plugins]]
-repo = 'Shougo/context_filetype.vim'
-
-[[plugins]]
-repo = 'Shougo/neosnippet-snippets'
 
 [[plugins]]
 repo = 'honza/vim-snippets'
 
 [[plugins]]
-repo = 'hirsaeki-mki/ansible-vim'
-
-[[plugins]]
-repo = 'kana/vim-operator-user'
-
-[[plugins]]
-repo = 'kannokanno/previm'
+repo = 'Shougo/defx.nvim'
+depends = ['defx-git']
 hook_add = '''
-  let g:previm_open_cmd = 'firefox'
-  augroup PrevimSettings
-    autocmd!
-    autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-  augroup END
+  execute 'source ' . g:toml_dir . '/plugins/defx.rc.vim'
 '''
 
 [[plugins]]
-repo = 'tpope/vim-markdown'
+repo ='kristijanhusak/defx-git'
+hook_add = '''
+  execute 'source ' . g:toml_dir . '/plugins/defx-git.rc.vim'
+'''
 
 [[plugins]]
-repo = 'vim-scripts/fcitx.vim'
+repo = 'Shougo/deol.nvim'
+hook_add = '''
+  execute 'source ' . g:toml_dir . '/plugins/deol.rc.vim'
+'''
+
+[[plugins]]
+repo ='lifepillar/vim-solarized8'
+
+[[plugins]]
+repo = 'vim-scripts/BufOnly.vim.git'
+
+[[plugins]]
+repo = 'SirVer/ultisnips'
+hook_add = '''
+let g:UltiSnipsUsePythonVersion = 3
+let g:UltiSnipsExpandTrigger = "<C-u>"
+let g:ulti_expand_or_jump_res = 0
+let g:UltiSnipsEnableSnipMate = 1
+
+function! ExpandSnippetOrReturn()
+  let snippet = UltiSnips#ExpandSnippetOrJump()
+  if g:ulti_expand_or_jump_res > 0
+    return snippet
+  else
+    return "<CR>"
+  endif
+endfunction
+
+inoremap <silent> <CR> pumvisible() ? "=ExpandSnippetOrReturn()" : "<CR>"
+'''
+
+[[plugins]]
+repo ='Shougo/neosnippet-snippets'
+
+[[plugins]]
+repo = 'ujihisa/neco-look'
+
+[[plugins]]
+repo = 'honza/vim-snippets'
+
+[[plugins]]
+repo = 'Shougo/neco-syntax'
+

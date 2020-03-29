@@ -1,48 +1,27 @@
-" Insert mode keymap in dein
-call denite#custom#map('normal', '<C-n>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('normal', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
-call denite#custom#map('insert', '<C-n>', '<denite:move_to_next_line>', 'noremap')
-call denite#custom#map('insert', '<C-p>', '<denite:move_to_previous_line>', 'noremap')
-call denite#custom#map('insert', '<C-f>', '<denite:assign_next_text>', 'noremap')
-call denite#custom#map('insert', '<C-b>', '<denite:assign_previous_text>', 'noremap')
-call denite#custom#map('insert', '<C-s>', '<denite:do_action:split>', 'noremap')
-call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>', 'noremap')
-call denite#custom#map('insert', '<C-o>', '<denite:do_action:tabopen>', 'noremap')
+autocmd FileType denite call s:denite_my_settings()
+function! s:denite_my_settings() abort
+  nnoremap <silent><buffer><expr> <CR>
+  \ denite#do_map('do_action')
+  nnoremap <silent><buffer><expr> d
+  \ denite#do_map('do_action', 'delete')
+  nnoremap <silent><buffer><expr> p
+  \ denite#do_map('do_action', 'preview')
+  nnoremap <silent><buffer><expr> q
+  \ denite#do_map('quit')
+  nnoremap <silent><buffer><expr> i
+  \ denite#do_map('open_filter_buffer')
+  nnoremap <silent><buffer><expr> <Space>
+  \ denite#do_map('toggle_select').'j'
+endfunction
 
-call denite#custom#source(
-    \ 'file_rec', 'matchers', ['matcher_fuzzy', 'matcher_project_files', 'matcher_ignore_globs'])
+autocmd FileType denite-filter call s:denite_filter_my_settings()
+function! s:denite_filter_my_settings() abort
+  imap <silent><buffer> <C-o> <Plug>(denite_filter_quit)
+endfunction
 
-call denite#custom#filter('matcher_ignore_globs', 'ignore_globs',
-    \ [ '.git/', '.ropeproject/', '__pycache__/',
-    \   'venv/', 'images/', '*.min.*', 'img/', 'fonts/', 'vendor/', 'node_modules/', '*.pyc'])
-
-call denite#custom#source(
-    \ 'file_mru', 'matchers', ['matcher/fuzzy', 'matcher/project_files'])
-
-" Matcher use cpsm
-" if has('python3')
-"     call denite#custom#source(
-"     \ 'file_rec', 'matchers', ['matcher_cpsm'])
-" endif
-
-" pt and ag command on grep source
-if executable('pt')
-    call denite#custom#var('file_rec', 'command',
-        \ ['pt', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
-    call denite#custom#var('grep', 'command',
-        \ ['pt', '--nogroup', '--nocolor', '--smart-case', '--hidden'])
-    call denite#custom#var('grep', 'default_opts', [])
-    call denite#custom#var('grep', 'recursive_opts', [])
-    call denite#custom#var('grep', 'separator', ['--'])
-elseif executable('ag')
-    call denite#custom#var('file_rec', 'command',
-        \ ['ag', '--follow', '--nocolor', '--nogroup', '--hidden', '-g', ''])
-    call denite#custom#var('grep', 'command',
-        \ ['ag', '--nogroup', '--nocolor', '--smart-case', '--hidden'])
-    call denite#custom#var('grep', 'default_opts', [])
-    call denite#custom#var('grep', 'recursive_opts', [])
-    call denite#custom#var('grep', 'separator', ['--'])
-endif
-
-" outline source variable
-" call denite#custom#var('outline', 'ignore_types', ['v'])
+augroup transparent-windows
+  autocmd!
+  autocmd FileType denite set winblend=10  " こちらも 5 〜 30 で試してみてください。
+  autocmd FileType denite set title " こちらも 5 〜 30 で試してみてください。
+  autocmd FileType denite-filter set winblend=10
+augroup END
