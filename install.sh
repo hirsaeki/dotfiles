@@ -18,4 +18,5 @@ else
     die "curl or wget required"
 fi
 
+cd $DOTPATH
 make $@ install
