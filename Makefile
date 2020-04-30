@@ -35,7 +35,7 @@ deploy: ## Create symlink to home directory
 init: ## intialize environment
 	@echo '==> install appimages'
 	@$(foreach val, $(APPIMAGES), \
-	@curl -sL $(GITHUB)/$(patsubst .%,,$(val))/release/latest/$$(curl -sL $(GITHUB)/$(patsubst .%,,$(val))/releases/latest|grep -i "href.*\.appimage"|sed 's:.*/\(.*\.appimage\).*:\1:I') -o $(HOME)/bin/$(patsubst %.,,$(val)) \
+	curl -sL $(GITHUB)/$(patsubst .%,,$(val))/release/latest/$$(curl -sL $(GITHUB)/$(patsubst .%,,$(val))/releases/latest|grep -i "href.*\.appimage"|sed 's:.*/\(.*\.appimage\).*:\1:I') -o $(HOME)/bin/$(patsubst %.,,$(val)) \
 	;)
 
 .PHONY: clean
