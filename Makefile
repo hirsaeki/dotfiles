@@ -5,8 +5,9 @@ CANDIDATES := $(shell find $(DOTPATH) -type f \( -path '*/.??*' -o -path '*/bin/
 EXCLUSIONS := .DS_Store .git% .gitmodules .travis.yml
 DOTFILES   := $(filter-out $(EXCLUSIONS), $(CANDIDATES))
 DOTDIRS    := $(filter-out $(EXCLUSIONS), $(DIRS))
-GITHUB     := https://gitnub.com
+GITHUB     := https://github.com
 APPIMAGES := nelsonenzo/tmux-appimage.tmux neovim/neovim.nvim
+dot-split = $(word $2,$(subst ., ,$1))
 
 .DEFAULT_GOAL := help
 
@@ -34,9 +35,10 @@ deploy: ## Create symlink to home directory
 .PHONY: init
 init: ## intialize environment
 	@echo '==> install appimages'
-	@$(foreach val, $(APPIMAGES), \
-	curl -sL $(GITHUB)/$(patsubst .%,,$(val))/release/latest/$$(curl -sL $(GITHUB)/$(patsubst .%,,$(val))/releases/latest|grep -i "href.*\.appimage"|sed 's:.*/\(.*\.appimage\).*:\1:I') -o $(HOME)/bin/$(patsubst %.,,$(val)) \
-	;)
+	$(foreach val, $(APPIMAGES),\
+	curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$$(curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/latest|grep -i "href.*\.appimage"|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') -o bin/$(call dot-split,$(val),2) &&\
+	chmod +x bin/$(call dot-split,$(val),2)\
+	|| : ;) 
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo
@@ -49,3 +51,7 @@ help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| sort \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: test
+test: ## intialize environment
+	echo '$(call dot-split,vvv.hhh,1)'
