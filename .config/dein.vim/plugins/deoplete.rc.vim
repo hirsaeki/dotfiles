@@ -30,9 +30,12 @@ call deoplete#custom#source('_', {
   \ })
 call deoplete#custom#source('ultisnips', {
   \   'matcher': ['matcher_fuzzy'],
-  \   'rank': 100,
+  \   'rank': 9999,
   \ })
-
+call deoplete#custom#source('look', {
+  \   'matcher': ['matcher_fuzzy'],
+  \   'rank': 1,
+  \ })
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#auto_complete_delay = 50
 let g:deoplete#auto_complete_start_length = 1
