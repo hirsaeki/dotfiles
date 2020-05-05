@@ -35,10 +35,11 @@ deploy: ## Create symlink to home directory
 .PHONY: init
 init: ## intialize environment
 	@echo '==> install appimages'
-	$(foreach val, $(APPIMAGES),\
+	@$(foreach val, $(APPIMAGES),\
+		echo '==> install $(call dot-split,$(val),1)'; \
 		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$$(curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/latest|grep -i "href.*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') -o bin/$(call dot-split,$(val),2) &&\
-	chmod +x bin/$(call dot-split,$(val),2)\
-	|| : ;) 
+		chmod +x bin/$(call dot-split,$(val),2)\
+		|| : ;) 
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo
