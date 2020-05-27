@@ -1,2 +1,4 @@
 .zshrc_local
 .zsh/.zcompdump
+_Makefile
+.local/share/fish/fish_history

@@ -11,6 +11,8 @@ TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
 
+.DEFAULT_GOAL := help
+
 .PHONY: all
 all:
 
@@ -37,12 +39,13 @@ init: ## intialize environment
 deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
-	@echo '==> create directories if not present.'
+	@echo '==> create directoriest.'
 	@echo ''
-	@mkdir -p $(CAND_DIRS)
+	@$(foreach val, $(CAND_DIRS), [ -L $${HOME}/$(val:/=) ] && unlink $${HOME}/$(val:/=) || : ;)
+	@mkdir -p $(patsubst %,$${HOME}/%,$(CAND_DIRS))
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
-	$(foreach val, $(CAND_LINKS), [ -d $${HOME}/$(val) ] && rm -rf $${HOME}/$(val); ln -sf $(abspath $(val)) $${HOME}/$(val);)
+	@$(foreach val, $(CAND_LINKS), [ -d $${HOME}/$(val) ] && rm -rf $${HOME}/$(val) || [ ! -L $${HOME}/$(val) ] || unlink $${HOME}/$(val); ln -sfT $(abspath $(val)) $${HOME}/$(val);)
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo
