@@ -1,6 +1,6 @@
-F_CAND     := .??*/ .local/*/ .??*/* .local/*/*
+F_CAND     := .??*/ .local/*/ .??*/* .local/*/* .dircolors
 F_DIRS     := %/ .local/%/
-F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .local/
+F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .dircolors/% .local/ .local/bin .local/share .local/appimages%
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
@@ -9,6 +9,7 @@ GITHUB     := https://github.com
 APPIMAGES := z80oolong/tmux-eaw-appimage.tmux neovim/neovim.nvim
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
+appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
 
 .PHONY: all
 all:
@@ -23,11 +24,10 @@ init: ## intialize environment
 	@echo ''
 	@$(foreach val, $(APPIMAGES),\
 		echo '==> install $(call dot-split,$(val),1)'; \
-		target=$$(curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/latest|grep -i "href.*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') &&\
-		echo $$target; \
-		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$$target -o .local/appimages/$$(basename $$target) &&\
-		chmod +x .local/appimages/$$(basename $$target) &&\
-		ln -sfn ../appimages/$$(basename $$target) .local/bin/$(call dot-split,$(val),2) ||\
+		echo '==> appimage is $(call appimage-subpath,$(val))'; \
+		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$(call appimage-subpath,$(val)) -o .local/appimages/$(notdir $(call appimage-subpath,$(val))) &&\
+		chmod +x .local/appimages/$(notdir $(call appimage-subpath,$(val))) &&\
+		ln -fn $(abspath .local/appimages/$(notdir $(call appimage-subpath,$(val)))) .local/bin/$(call dot-split,$(val),2) ||\
 		: ;)
 	@echo '==> clone dircolors'
 	@echo ''
@@ -42,12 +42,7 @@ deploy: ## Create symlink to home directory
 	@mkdir -p $(CAND_DIRS)
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
-	$(foreach val, $(CAND_LINKS), ln -sfnv $(abspath $(val)) $(HOME)/$(val);)
-	@echo '==> link terminfo dir to ~/.terminfo which has xterm-256color'
-	@echo ''
-	@$(foreach val, $(TERMINFO_DIRS), \
-		[ $$(find $(val) -name "xterm-256color"|wc -l) -gt 0 ] && ln -sfn $(val) $(HOME)/.terminfo || : \
-		;)
+	$(foreach val, $(CAND_LINKS), [ -d $${HOME}/$(val) ] && rm -rf $${HOME}/$(val); ln -sf $(abspath $(val)) $${HOME}/$(val);)
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo
