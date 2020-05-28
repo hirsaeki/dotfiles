@@ -39,13 +39,16 @@ init: ## intialize environment
 deploy: ## Create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
-	@echo '==> create directoriest.'
+	@echo '==> create directories.'
 	@echo ''
 	@$(foreach val, $(CAND_DIRS), [ -L $${HOME}/$(val:/=) ] && unlink $${HOME}/$(val:/=) || : ;)
 	@mkdir -p $(patsubst %,$${HOME}/%,$(CAND_DIRS))
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
 	@$(foreach val, $(CAND_LINKS), [ -d $${HOME}/$(val) ] && rm -rf $${HOME}/$(val) || [ ! -L $${HOME}/$(val) ] || unlink $${HOME}/$(val); ln -sfT $(abspath $(val)) $${HOME}/$(val);)
+	@echo '==> execute post deployment script'
+	@echo ''
+	@$(shell ./post_deploy.sh)
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo

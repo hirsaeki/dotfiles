@@ -1,0 +1,17 @@
+--- /home/hsaeki/.local/lib/python2.7/site-packages/powerline/bindings/tmux/__init__.py	2020-05-28 13:07:36.619999000 +0900
++++ ./__init__.py	2020-05-28 13:03:38.940000000 +0900
+@@ -78,7 +78,10 @@ def get_tmux_version(pl):
+ 	version_string = version_string.strip()
+ 	if version_string == 'master':
+ 		return TmuxVersionInfo(float('inf'), 0, version_string)
+-	major, minor = version_string.split('.')
+-	suffix = DIGITS.subn('', minor)[0] or None
+-	minor = NON_DIGITS.subn('', minor)[0]
+-	return TmuxVersionInfo(int(major), int(minor), suffix)
++	try:
++		major, minor = version_string.split('.')
++		suffix = DIGITS.subn('', minor)[0] or None
++		minor = NON_DIGITS.subn('', minor)[0]
++		return TmuxVersionInfo(int(major), int(minor), suffix)
++	except:
++		return TmuxVersionInfo(float('inf'), 0, version_string)
