@@ -1,4 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
-let g:netrw_dirhist_1='/home/hsaeki/.config/libskk/rules/MyAzik/rom-kana'
-let g:netrw_dirhist_2='/home/hsaeki/.cache/dein/repos/github.com/Shougo/dein.vim'
+let g:netrw_dirhistcnt =1
+let g:netrw_dirhist_1='scp://ansible-cm/'

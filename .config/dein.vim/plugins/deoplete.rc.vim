@@ -1,3 +1,5 @@
+let g:deoplete#enable_at_startup = 1
+
 if !has('nvim')
   call dein#add('roxma/nvim-yarp')
   call dein#add('roxma/vim-hug-neovim-rpc')
@@ -28,20 +30,27 @@ endfunction
 
 call deoplete#custom#source('_', {
   \ })
+call deoplete#custom#source('buffer', {
+  \   'require_same_filetype': v:false,
+  \ })
+call deoplete#custom#source('lsp', {
+  \   'matcher': ['matcher_fuzzy'],
+  \   'rank': 650,
+  \ })
 call deoplete#custom#source('ultisnips', {
   \   'matcher': ['matcher_fuzzy'],
-  \   'rank': 9999,
+  \   'rank': 600,
   \ })
 call deoplete#custom#source('look', {
   \   'matcher': ['matcher_fuzzy'],
   \   'rank': 1,
   \ })
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 50
-let g:deoplete#auto_complete_start_length = 1
-let g:deoplete#enable_camel_case = 1
-let g:deoplete#enable_ignore_case = 1
-let g:deoplete#enable_refresh_always = 1
-let g:deoplete#enable_smart_case = 1
-let g:deoplete#file#enable_buffer_path = 1
-let g:deoplete#max_list = 10000
+call deoplete#custom#option({
+  \   'auto_complete_delay': 0,
+  \   'auto_reflesh_delay': 20,
+  \   'reflesh_always': 20,
+  \   'camel_case': v:true,
+  \   'smart_case': v:true,
+  \   'max_list': 300,
+  \ })
+" call deoplete#enable_logging("DEBUG", "deoplete.log")

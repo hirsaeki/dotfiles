@@ -11,6 +11,18 @@ let g:lsp_signs_hint = {'text': '?'}
 let g:lsp_log_verbose = 1
 let g:lsp_log_file = expand('~/vim-lsp.log')
 
+" pylsの設定。LinterのON/OFFなどが可能
+let s:pyls_config = {'pyls': {'plugins': {
+    \   'pycodestyle': {'enabled': v:true},
+    \   'pydocstyle': {'enabled': v:false},
+    \   'pylint': {'enabled': v:false},
+    \   'flake8': {'enabled': v:true},
+    \   'jedi_definition': {
+    \     'follow_imports': v:true,
+    \     'follow_builtin_imports': v:true,
+    \   },
+    \ }}}
+
 if (executable('pyls'))
   augroup LspPython
     autocmd!
@@ -40,6 +52,14 @@ if (executable('yaml-language-server'))
     \ }
     \ })
   augroup END
+endif
+
+if executable('terraform-lsp')
+  au User lsp_setup call lsp#register_server({
+    \ 'name': 'terraform-lsp',
+    \ 'cmd': {server_info->['terraform-lsp']},
+    \ 'whitelist': ['terraform','tf'],
+    \ })
 endif
 
 " 定義ジャンプ(デフォルトのctagsによるジャンプを上書きしているのでこのあたりは好みが別れます)

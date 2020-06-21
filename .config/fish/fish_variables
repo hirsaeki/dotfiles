@@ -3,7 +3,7 @@
 SETUVAR __fish_initialized:3100
 SETUVAR _fish_abbr_vi:nvim
 SETUVAR _fish_abbr_vim:nvim
-SETUVAR _fish_abbr_vimo:vim\x20\x2du\x20/home/hsaeki/essential\x2evim
+SETUVAR _fish_abbr_vo:nvim\x20\x2du\x20/home/hsaeki/\x2econfig/nvim/essential\x2evim
 SETUVAR fish_color_autosuggestion:555\x1ebrblack
 SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:005fd7

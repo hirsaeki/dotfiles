@@ -2,14 +2,6 @@
 repo = 'Shougo/dein.vim'
 
 [[plugins]]
-repo ='scrooloose/nerdtree'
-hook_add = '''
-  let g:NERDTreeShowHidden=1
-  let g:NERDTreeIgnore=['\.pyc$', '__pycache__']
-  nnoremap <silent><C-n> :NERDTreeToggle<CR>
-'''
-
-[[plugins]]
 repo = 'itchyny/lightline.vim'
 hook_add = '''
   execute 'source ' . g:toml_dir . '/plugins/lightline.rc.vim'
@@ -78,3 +70,11 @@ repo = 'honza/vim-snippets'
 [[plugins]]
 repo = 'Shougo/neco-syntax'
 
+[[plugins]]
+repo = 'hashivim/vim-terraform'
+
+[[plugins]]
+repo = 'vim-syntastic/syntastic'
+
+[[plugins]]
+repo = 'juliosueiras/vim-terraform-completion'

@@ -124,7 +124,8 @@ repo = 'prabirshrestha/vim-lsp'
 on_ft = [
   'python',
   'yaml',
-  'yaml-ansible'
+  'yaml-ansible',
+  'terraform'
 ]
 depends = [
   'async.vim'
