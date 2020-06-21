@@ -6,10 +6,10 @@ CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
 CAND_LINKS = $(filter-out $(F_DIRS), $(CANDIDATES))
 GITHUB     := https://github.com
-APPIMAGES := z80oolong/tmux-eaw-appimage.tmux neovim/neovim.nvim
+APPIMAGES := z80oolong/tmux-eaw-appimage.tmux neovim/neovim.nvim niess/linuxdeploy-plugin-python.python3
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
-appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
+appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
 
 .DEFAULT_GOAL := help
 
