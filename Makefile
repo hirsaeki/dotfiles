@@ -7,8 +7,10 @@ CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
 CAND_LINKS = $(filter-out $(F_DIRS), $(CANDIDATES))
 GITHUB     := https://github.com
 APPIMAGES := z80oolong/tmux-eaw-appimage.tmux neovim/neovim.nvim niess/linuxdeploy-plugin-python.python3
+ALT_APPIMAGES := https://download.opensuse.org/repositories/shells:/fish:/nightly:/master/AppImage/fish-latest-x86_64.AppImage^fish
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
+hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
 
 .DEFAULT_GOAL := help
@@ -30,6 +32,14 @@ init: ## intialize environment
 		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$(call appimage-subpath,$(val)) -o .local/appimages/$(notdir $(call appimage-subpath,$(val))) &&\
 		chmod +x .local/appimages/$(notdir $(call appimage-subpath,$(val))) &&\
 		ln -fn $(abspath .local/appimages/$(notdir $(call appimage-subpath,$(val)))) .local/bin/$(call dot-split,$(val),2) ||\
+		: ;)
+	@echo '==> install appimages from alternative source'
+	@echo ''
+	@$(foreach val, $(ALT_APPIMAGES),\
+		echo '==> install $(call hat-split,$(val),1)'; \
+		curl -sL $(call hat-split,$(val),1) -o .local/appimages/$(notdir $(call hat-split,$(val),2)) &&\
+		chmod +x .local/appimages/$(notdir $(call hat-split,$(val),2)) &&\
+		ln -fn $(abspath .local/appimages/.local/appimages/$(notdir $(call hat-split,$(val),2))) .local/bin/$(call hat-split,$(val),2) ||\
 		: ;)
 	@echo '==> clone dircolors'
 	@echo ''
