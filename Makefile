@@ -6,12 +6,12 @@ CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
 CAND_LINKS = $(filter-out $(F_DIRS), $(CANDIDATES))
 GITHUB     := https://github.com
-APPIMAGES := z80oolong/tmux-eaw-appimage.tmux neovim/neovim.nvim niess/linuxdeploy-plugin-python.python3
-ALT_APPIMAGES := https://download.opensuse.org/repositories/shells:/fish:/nightly:/master/AppImage/fish-latest-x86_64.AppImage^fish
+APPIMAGES := neovim/neovim.nvim niess/linuxdeploy-plugin-python.python3
+ALT_APPIMAGES := https://github.com/z80oolong/tmux-eaw-appimage/releases/download/v3.1b-eaw-appimage-0.1.3/tmux-eaw-3.1b-x86_64.AppImage^tmux
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
-appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
+appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
 
 .DEFAULT_GOAL := help
 
@@ -33,13 +33,13 @@ init: ## intialize environment
 		chmod +x .local/appimages/$(notdir $(call appimage-subpath,$(val))) &&\
 		ln -fn $(abspath .local/appimages/$(notdir $(call appimage-subpath,$(val)))) .local/bin/$(call dot-split,$(val),2) ||\
 		: ;)
-	@echo '==> install appimages from alternative source'
+	@echo '==> install appimages from alternative sources'
 	@echo ''
 	@$(foreach val, $(ALT_APPIMAGES),\
 		echo '==> install $(call hat-split,$(val),1)'; \
-		curl -sL $(call hat-split,$(val),1) -o .local/appimages/$(notdir $(call hat-split,$(val),2)) &&\
-		chmod +x .local/appimages/$(notdir $(call hat-split,$(val),2)) &&\
-		ln -fn $(abspath .local/appimages/.local/appimages/$(notdir $(call hat-split,$(val),2))) .local/bin/$(call hat-split,$(val),2) ||\
+		curl -sL $(call hat-split,$(val),1) -o .local/appimages/$(notdir $(call hat-split,$(val),1)) &&\
+		chmod +x .local/appimages/$(notdir $(call hat-split,$(val),1)) &&\
+		ln -fn $(abspath .local/appimages/$(notdir $(call hat-split,$(val),1))) .local/bin/$(call hat-split,$(val),2) ||\
 		: ;)
 	@echo '==> clone dircolors'
 	@echo ''
@@ -58,7 +58,7 @@ deploy: ## Create symlink to home directory
 	@$(foreach val, $(CAND_LINKS), [ -d $${HOME}/$(val) ] && rm -rf $${HOME}/$(val) || [ ! -L $${HOME}/$(val) ] || unlink $${HOME}/$(val); ln -sfT $(abspath $(val)) $${HOME}/$(val);)
 	@echo '==> execute post deployment script'
 	@echo ''
-	@$(shell ./post_deploy.sh)
+	@./post_deploy.sh
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo

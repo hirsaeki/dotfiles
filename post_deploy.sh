@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -x
 curl -sL curl https://bootstrap.pypa.io/get-pip.py|python3
 pip install powerline-status --user
 for i in $(find ~/.local/lib -path "*/tmux/__init__.py"); do
