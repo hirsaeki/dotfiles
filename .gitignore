@@ -2,4 +2,4 @@
 .zsh/.zcompdump
 _Makefile
 .local/share/*
-.local/share/.gitkeep
+!.local/share/.gitkeep
