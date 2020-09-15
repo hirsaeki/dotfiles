@@ -43,7 +43,7 @@ init: ## intialize environment
 		: ;)
 	@echo '==> install pypy'
 	@echo ''
-	@curl -sL https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v7.3.1-linux64.tar.bz2|tar -xjf - -C .local/share
+	@curl -sL $$(curl -s https://www.pypy.org/download.html|grep "href=.*pypy3\..*linux64"|sed 's/.*href=\"\(.*\)\">.*/\1/')|tar -xjf - -C .local/share
 	@echo '==> clone dircolors'
 	@echo ''
 	@test ! -d .dircolors && mkdir -p .dircolors && curl -sL https://github.com/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C .dircolors --strip-component=1 --exclude='img' || : ;

@@ -1,5 +1,5 @@
 .zshrc_local
 .zsh/.zcompdump
 _Makefile
-.local/share/fish/fish_history
-.local/share/pypy*
+.local/share/*
+.local/share/.gitkeep
