@@ -6,7 +6,7 @@ CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
 CAND_LINKS = $(filter-out $(F_DIRS), $(CANDIDATES))
 GITHUB     := https://github.com
-APPIMAGES := neovim/neovim.nvim niess/linuxdeploy-plugin-python.python3
+APPIMAGES := neovim/neovim.nvim
 ALT_APPIMAGES := https://github.com/z80oolong/tmux-eaw-appimage/releases/download/v3.1b-eaw-appimage-0.1.3/tmux-eaw-3.1b-x86_64.AppImage^tmux
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
@@ -41,6 +41,9 @@ init: ## intialize environment
 		chmod +x .local/appimages/$(notdir $(call hat-split,$(val),1)) &&\
 		ln -fn $(abspath .local/appimages/$(notdir $(call hat-split,$(val),1))) .local/bin/$(call hat-split,$(val),2) ||\
 		: ;)
+	@echo '==> install pypy'
+	@echo ''
+	@curl -sL https://bitbucket.org/pypy/pypy/downloads/pypy3.6-v7.3.1-linux64.tar.bz2|tar -xjf - -C .local/share
 	@echo '==> clone dircolors'
 	@echo ''
 	@test ! -d .dircolors && mkdir -p .dircolors && curl -sL https://github.com/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C .dircolors --strip-component=1 --exclude='img' || : ;

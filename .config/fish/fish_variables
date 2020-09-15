@@ -1,6 +1,11 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
 SETUVAR --export --path LD_LIBRARY_PATH:
+SETUVAR --export PIPENV_VENV_IN_PROJECT:1
+SETUVAR --export VAGRANT_DEFAULT_PROVIDER:hyperv
+SETUVAR --export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS:1
+SETUVAR --export VAGRANT_WSL_WINDOWS_ACCESS_USER:hsaeki
+SETUVAR --export --path VAGRANT_WSL_WINDOWS_ACCESS_USER_HOME_PATH:/mnt/v/vagrant/
 SETUVAR __fish_initialized:3100
 SETUVAR _fish_abbr_vi:nvim
 SETUVAR _fish_abbr_vim:nvim

@@ -55,11 +55,14 @@ if (executable('yaml-language-server'))
 endif
 
 if executable('terraform-lsp')
-  au User lsp_setup call lsp#register_server({
-    \ 'name': 'terraform-lsp',
-    \ 'cmd': {server_info->['terraform-lsp']},
-    \ 'whitelist': ['terraform','tf'],
-    \ })
+  augroup LspTf
+    autocmd!
+    au User lsp_setup call lsp#register_server({
+      \ 'name': 'terraform-lsp',
+      \ 'cmd': {server_info->['terraform-lsp']},
+      \ 'whitelist': ['terraform','tf'],
+      \ })
+  augroup END
 endif
 
 " 定義ジャンプ(デフォルトのctagsによるジャンプを上書きしているのでこのあたりは好みが別れます)

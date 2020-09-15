@@ -9,8 +9,8 @@ set termguicolors
 set pumblend=10
 
 " set system python path
-" let g:python3_host_prog = '/usr/bin/python3'
-" let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = '/usr/bin/python3'
+let g:python_host_prog = '/usr/bin/python2'
 
 "---------------------------------------------------------------------------
 :
@@ -127,16 +127,16 @@ endif
 
 "---------------------------------------------------------------------------
 " 括弧とクォートを自動補完
-" inoremap { {}<LEFT>
-" inoremap [ []<LEFT>
-" inoremap ( ()<LEFT>
-" inoremap " ""<LEFT>
-" inoremap ' ''<LEFT>
-" vnoremap { "zdi^V{<C-R>z}<ESC>
-" vnoremap [ "zdi^V[<C-R>z]<ESC>
-" vnoremap ( "zdi^V(<C-R>z)<ESC>
-" vnoremap " "zdi^V"<C-R>z^V"<ESC>
-" vnoremap ' "zdi'<C-R>z'<ESC>
+inoremap { {}<LEFT>
+inoremap [ []<LEFT>
+inoremap ( ()<LEFT>
+inoremap " ""<LEFT>
+inoremap ' ''<LEFT>
+vnoremap { "zdi^V{<C-R>z}<ESC>
+vnoremap [ "zdi^V[<C-R>z]<ESC>
+vnoremap ( "zdi^V(<C-R>z)<ESC>
+vnoremap " "zdi^V"<C-R>z^V"<ESC>
+vnoremap ' "zdi'<C-R>z'<ESC>
 
 "---------------------------------------------------------------------------
 "表示行単位で行移動する
