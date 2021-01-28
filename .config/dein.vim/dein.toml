@@ -65,9 +65,6 @@ repo ='Shougo/neosnippet-snippets'
 repo = 'ujihisa/neco-look'
 
 [[plugins]]
-repo = 'honza/vim-snippets'
-
-[[plugins]]
 repo = 'Shougo/neco-syntax'
 
 [[plugins]]

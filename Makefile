@@ -1,3 +1,4 @@
+SHELL      = /bin/bash
 F_CAND     := .??*/ .local/*/ .??*/* .local/*/* .dircolors
 F_DIRS     := %/ .local/%/
 F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .dircolors/% .local/ .local/bin .local/share .local/appimages%
@@ -7,7 +8,7 @@ CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
 CAND_LINKS = $(filter-out $(F_DIRS), $(CANDIDATES))
 GITHUB     := https://github.com
 APPIMAGES := neovim/neovim.nvim
-ALT_APPIMAGES := https://github.com/z80oolong/tmux-eaw-appimage/releases/download/v3.1b-eaw-appimage-0.1.3/tmux-eaw-3.1b-x86_64.AppImage^tmux
+ALT_APPIMAGES := $(shell curl -H "Authorization: token bf456091c0f33a53e37df742190a35a2c6afddcc" -sL https://api.github.com/repos/z80oolong/tmux-eaw-appimage/releases/latest | jq -r '.assets[].browser_download_url|select(test("3.1b"))'|tail -n 1)^tmux
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
@@ -17,6 +18,10 @@ appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/la
 
 .PHONY: all
 all:
+
+test:
+	@$(eval ppath := $(abspath $(shell find .local/share -type f -wholename '*pypy2*bin/pypy'|sort|tail -n 1)))
+	@echo 'export PATH=$(dir $(ppath)):$$PATH' >> ~/test
 
 show: ## show deploy candidates
 	@echo "directories ==> $(CAND_DIRS)"
@@ -45,7 +50,16 @@ init: ## intialize environment
 	@echo ''
 	@curl -sL $$(curl -s https://www.pypy.org/download.html|grep "href=.*pypy3\..*linux64"|sed 's/.*href=\"\(.*\)\">.*/\1/')|tar -xjf - -C .local/share
 	@curl -sL $$(curl -s https://www.pypy.org/download.html|grep "href=.*pypy2\..*linux64"|sed 's/.*href=\"\(.*\)\">.*/\1/')|tar -xjf - -C .local/share
-	@ln -fn $(abspath .local/share/)
+	@$(eval ppath := $(abspath $(shell find .local/share -type f -wholename '*pypy2*bin/pypy'|sort|tail -n 1)))
+	@ln -sf $(ppath) .local/bin/python2
+	@fish -c "contains /home/hsaeki/.local/hoge $$fish_user_paths || set --universal --prepend fish_user_paths $(dir $(ppath)); :"
+	@[ -e .profile ] && grep 'export PATH=$(dir $(ppath))' .profile || (echo 'export PATH=$(dir $(ppath)):$$PATH' >> .profile)
+	@$(eval ppath := $(abspath $(shell find .local/share -type f -wholename '*pypy3*bin/pypy3'|sort|tail -n 1)))
+	@ln -sf $(ppath) .local/bin/python3
+	@ln -sf $(ppath) .local/bin/python
+	@fish -c "contains /home/hsaeki/.local/hoge $$fish_user_paths || set --universal --prepend fish_user_paths $(dir $(ppath)); :"
+	@[ -e .profile ] && grep 'export PATH=$(dir $(ppath))' .profile || (echo 'export PATH=$(dir $(ppath)):$$PATH' >> .profile)
+	@[ -e .profile ] && source .profile
 	@echo '==> clone dircolors'
 	@echo ''
 	@test ! -d .dircolors && mkdir -p .dircolors && curl -sL https://github.com/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C .dircolors --strip-component=1 --exclude='img' || : ;

@@ -1,7 +1,7 @@
 #!/bin/bash
 set -x
 curl -sL curl https://bootstrap.pypa.io/get-pip.py|python3
-pip install powerline-status --user
+pip install powerline-status -U
 for i in $(find ~/.local/lib -path "*/tmux/__init__.py"); do
   patch --forward -fs ${i} < ./powerline-status.patch
 done

@@ -54,12 +54,12 @@ if (executable('yaml-language-server'))
   augroup END
 endif
 
-if executable('terraform-lsp')
+if executable('terraform-ls')
   augroup LspTf
     autocmd!
     au User lsp_setup call lsp#register_server({
-      \ 'name': 'terraform-lsp',
-      \ 'cmd': {server_info->['terraform-lsp']},
+      \ 'name': 'terraform-ls',
+      \ 'cmd': {server_info->['terraform-ls', 'serve']},
       \ 'whitelist': ['terraform','tf'],
       \ })
   augroup END
