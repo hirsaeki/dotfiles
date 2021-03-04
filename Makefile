@@ -63,11 +63,6 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
 	@$(foreach val, $(CAND_LINKS), [ -d $(HOME)/$(val) ] && rm -rf $(HOME)/$(val) || [ ! -L $(HOME)/$(val) ] || unlink $(HOME)/$(val); ln -sfT $(abspath $(val)) $(HOME)/$(val);)
-	@echo '==> Start to deploy miniconda.'
-	@echo ''
-	@curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ./miniconda.sh
-	@bash ./miniconda.sh -b -p $(HOME)/miniconda > /dev/null 2>&1 || :
-	@grep -q "conda initialize" ~/.bashrc || _CONDA_PATH=$(HOME)/miniconda/etc/profile.d/conda.sh ./conda_bashrc.sh
 	@echo '===> Restore conda envs'
 	@echo ''
 	@$(foreach val, $(CONDA_ENVS), conda env create -f=$(val).yml 2>/dev/null || :;) 

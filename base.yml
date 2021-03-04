@@ -37,6 +37,7 @@ dependencies:
   - jedi=0.17.2=py38h578d9bd_1
   - jinja2=2.11.3=pyh44b312d_0
   - jmespath=0.10.0=pyh9f0ad1d_0
+  - jq=1.6=h36c2ea0_1000
   - jsonpatch=1.24=py_0
   - jsonpointer=2.0=py_0
   - keystoneauth1=4.3.1=pyhd8ed1ab_0
@@ -48,12 +49,14 @@ dependencies:
   - libgcc-ng=9.1.0=hdf63c60_0
   - libsodium=1.0.18=h36c2ea0_1
   - libstdcxx-ng=9.1.0=hdf63c60_0
+  - make=4.3=hd18ef5c_1
   - markupsafe=1.1.1=py38h8df0ef7_2
   - mccabe=0.6.1=py_1
   - munch=2.5.0=py_0
   - mypy_extensions=0.4.3=py38h578d9bd_3
   - ncurses=6.2=he6710b0_1
   - netifaces=0.10.9=py38h1e0a361_1003
+  - oniguruma=6.9.3=h36c2ea0_0
   - openssl=1.1.1h=h516909a_0
   - openstacksdk=0.53.0=py38h578d9bd_1
   - os-service-types=1.7.0=pyh9f0ad1d_0
