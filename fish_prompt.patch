@@ -1,0 +1,23 @@
+--- /home/testman/.config/fish/functions/fish_prompt.fish	2021-03-02 17:09:25.938629842 +0900
++++ ./fish_prompt.fish	2021-03-02 17:57:32.566936314 +0900
+@@ -159,6 +159,12 @@
+   end
+ end
+ 
++function prompt_conda_env -d "Display conda environment"
++  if test "$CONDA_DEFAULT_ENV"
++    prompt_segment yellow black $CONDA_DEFAULT_ENV
++  end
++end
++
+ function prompt_user -d "Display current user if different from $default_user"
+   if [ "$theme_display_user" = "yes" ]
+     if [ "$USER" != "$default_user" -o -n "$SSH_CLIENT" ]
+@@ -298,6 +304,7 @@
+   set -g RETVAL $status
+   prompt_status
+   prompt_virtual_env
++  prompt_conda_env
+   prompt_user
+   prompt_dir
+   if [ (cwd_in_scm_blacklist | wc -c) -eq 0 ]

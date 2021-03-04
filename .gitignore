@@ -4,3 +4,4 @@ _Makefile
 .local/share/*
 !.local/share/.gitkeep
 /miniconda.sh
+/terraform-ls.zip
