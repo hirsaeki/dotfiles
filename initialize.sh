@@ -9,3 +9,5 @@ grep -q "conda initialize" ~/.bashrc || _CONDA_PATH=${HOME}/miniconda/etc/profil
 eval "$(~/miniconda/bin/conda shell.bash hook)"
 echo '==> restore conda base.'
 conda env update -f=base.yml >/dev/null
+make init
+make deploy

@@ -1,7 +1,7 @@
 SHELL      = /bin/bash
-F_CAND     := .??*/ ??*/* .local/*/ .local/*/* .config/*/ .config/*/* .config/dein.vim
+F_CAND     := .??* ??*/* .local/*/ .local/*/* .config/*/ .config/*/* .config/dein.vim
 F_DIRS     := .vim/ .dircolors/ .local/ .local/%/ .config/ .config/fish/ .config/nvim/ 
-F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .local/appimages% .config/dein.vim/%
+F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .local/appimages% .config/dein.vim/% .config .local .vim .dircolors
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
@@ -12,7 +12,7 @@ TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
-CONDA_ENVS := base nvim nvim3
+CONDA_ENVS := nvim nvim3
 
 .DEFAULT_GOAL := help
 
@@ -51,6 +51,9 @@ init: ## intialize dotfiles path
 	@$(eval LS_VER := $(shell curl -sL https://releases.hashicorp.com/terraform-ls|grep href=\"/terraform |head -n 1 | awk -F/ '{print $$3}'))
 	@curl -sL https://releases.hashicorp.com/terraform-ls/$(LS_VER)/terraform-ls_$(LS_VER)_linux_amd64.zip -o terraform-ls.zip 2> /dev/null || :
 	@unzip -u terraform-ls.zip && mv terraform-ls .local/bin && rm terraform-ls.zip
+	@echo '==> modify .bashrc for conda.'
+	@echo ''
+	@grep -q "conda initialize" .bashrc || _CONDA_ROOT=$(HOME)/miniconda ./conda_bashrc.sh
 
 .PHONY: deploy
 deploy: ## ensure directories and create symlink to home directory
@@ -58,11 +61,12 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo ''
 	@echo '==> create directories.'
 	@echo ''
-	@$(foreach val, $(CAND_DIRS), [ -L $(HOME)/$(val:/=) ] && unlink $(HOME)/$(val:/=) || : ;)
+	$(foreach val, $(CAND_DIRS), [ -L $(HOME)/$(val:/=) ] && unlink $(HOME)/$(val:/=) || : ;)
 	@mkdir -p $(patsubst %,$(HOME)/%,$(CAND_DIRS))
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
-	@$(foreach val, $(CAND_LINKS), [ -d $(HOME)/$(val) ] && rm -rf $(HOME)/$(val) || [ ! -L $(HOME)/$(val) ] || unlink $(HOME)/$(val); ln -sfT $(abspath $(val)) $(HOME)/$(val);)
+	@mkdir -p ~/.orig
+	$(foreach val, $(CAND_LINKS), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || mv $(HOME)/$(val) $(HOME)/.orig/$(basename $(val)); ln -sfT $(abspath $(val)) $(HOME)/$(val);)
 	@echo '===> Restore conda envs'
 	@echo ''
 	@$(foreach val, $(CONDA_ENVS), conda env create -f=$(val).yml 2>/dev/null || :;) 
