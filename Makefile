@@ -1,7 +1,7 @@
 SHELL      = /bin/bash
 F_CAND     := .??* ??*/* .local/*/ .local/*/* .config/*/ .config/*/* .config/dein.vim
-F_DIRS     := .vim/ .dircolors/ .local/ .local/%/ .config/ .config/fish/ .config/nvim/ 
-F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .local/appimages% .config/dein.vim/% .config .local .vim .dircolors
+F_DIRS     := .vim/ .dircolors/ .local/ .local/%/ .config/ .config/fish/ .config/nvim/ .config/tmux/
+F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .local/appimages% .config/dein.vim/% .config .local .vim 
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
@@ -41,7 +41,6 @@ init: ## intialize dotfiles path
 	@echo '==> install tfenv.'
 	@echo ''
 	@git clone https://github.com/tfutils/tfenv.git .local/share/tfenv 2> /dev/null || :
-	@ln -fn $(abspath .local/share/tfenv/bin)/* .local/bin
 	@echo '==> install direnv.'
 	@echo ''
 	@curl -sL https://github.com/direnv/direnv/releases/latest/download/direnv.linux-amd64 -o .local/bin/direnv 2> /dev/null || :
@@ -54,6 +53,12 @@ init: ## intialize dotfiles path
 	@echo '==> modify .bashrc for conda.'
 	@echo ''
 	@grep -q "conda initialize" .bashrc || _CONDA_ROOT=$(HOME)/miniconda ./conda_bashrc.sh
+	@echo '==> install tmux plugin manager'
+	@echo ''
+	@git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm || :
+	@echo '==> clone dircolors'
+	@echo ''
+	@test ! -d .dircolors && mkdir -p .dircolors && curl -sL https://github.com/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C .dircolors --strip-component=1 --exclude='img' || :
 
 .PHONY: deploy
 deploy: ## ensure directories and create symlink to home directory
@@ -70,6 +75,18 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo '===> Restore conda envs'
 	@echo ''
 	@$(foreach val, $(CONDA_ENVS), conda env create -f=$(val).yml 2>/dev/null || :;) 
+	@echo '==> install aws cli'
+	@echo ''
+	@$(foreach val, ~/.local/bin/aws ~/.local/share/aws-cli, rm -rf $(val))
+	@$(eval TMP := $(shell mktemp -d))
+	@curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "$(TMP)/awscliv2.zip" && cd $(TMP) && unzip awscliv2.zip && ./aws/install -i ~/.local/share/aws-cli -b ~/.local/bin || :
+	@rm -rf $(TMP)
+	@echo '==> install aws cli v1'
+	@echo ''
+	@$(foreach val, ~/.local/bin/aws-v1 ~/.local/share/aws-cli-v1, rm -rf $(val))
+	@$(eval TMP := $(shell mktemp -d))
+	@curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli-v1 -b ~/.local/bin/aws-v1 || :
+	@#rm -rf $(TMP)
 	@echo '==> execute post deployment script'
 	@echo ''
 	@./post_deploy.sh

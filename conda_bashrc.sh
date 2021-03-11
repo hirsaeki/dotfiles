@@ -9,9 +9,10 @@ else
     if [ -f "${_CONDA_ROOT}/etc/profile.d/conda.sh" ]; then
         . "${_CONDA_ROOT}/etc/profile.d/conda.sh}"
     else
-        export PATH="${_CONDA_ROOT}/bin/:$PATH"
+        export PATH="${_CONDA_ROOT}/bin/:\$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+export PATH=~/.local/share/tfenv/bin:\$PATH
 EOF
