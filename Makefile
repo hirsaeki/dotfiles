@@ -86,7 +86,13 @@ deploy: ## ensure directories and create symlink to home directory
 	@$(foreach val, ~/.local/bin/aws-v1 ~/.local/share/aws-cli-v1, rm -rf $(val))
 	@$(eval TMP := $(shell mktemp -d))
 	@curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli-v1 -b ~/.local/bin/aws-v1 || :
-	@#rm -rf $(TMP)
+	@rm -rf $(TMP)
+	@echo '==> aws session manager'
+	@echo ''
+	@$(eval TMP := $(shell mktemp -d))
+	@curl -o $(TMP)/session-manager-plugin.deb -L https://s3.amazonaws.com/session-manager-downloads/plugin/1.2.30.0/ubuntu_64bit/session-manager-plugin.deb
+	@cd $(TMP) && dpkg-deb -x session-manager-plugin.deb session-manager-plugin && cp session-manager-plugin/usr/local/sessionmanagerplugin/bin/session-manager-plugin ~/.local/bin/session-manager-plugin || :
+	@rm -rf $(TMP)
 	@echo '==> execute post deployment script'
 	@echo ''
 	@./post_deploy.sh

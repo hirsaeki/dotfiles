@@ -120,7 +120,7 @@ dependencies:
   - pip:
     - aws-mfa==0.0.12
     - boto3==1.17.20
-    - botocore==1.20.20
+    - botocore==1.20.25
     - pexpect==4.8.0
     - ptyprocess==0.7.0
     - python-dateutil==2.8.1
