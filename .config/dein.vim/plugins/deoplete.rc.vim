@@ -35,15 +35,15 @@ call deoplete#custom#source('buffer', {
   \ })
 call deoplete#custom#source('lsp', {
   \   'matcher': ['matcher_fuzzy'],
-  \   'rank': 650,
+  \   'rank': 90,
   \ })
 call deoplete#custom#source('ultisnips', {
   \   'matcher': ['matcher_fuzzy'],
-  \   'rank': 600,
+  \   'rank': 80,
   \ })
 call deoplete#custom#source('look', {
   \   'matcher': ['matcher_fuzzy'],
-  \   'rank': 1,
+  \   'rank': 60,
   \ })
 call deoplete#custom#option({
   \   'auto_complete_delay': 0,
@@ -53,4 +53,4 @@ call deoplete#custom#option({
   \   'smart_case': v:true,
   \   'max_list': 300,
   \ })
-" call deoplete#enable_logging("DEBUG", "deoplete.log")
+"call deoplete#enable_logging("DEBUG", "deoplete.log")

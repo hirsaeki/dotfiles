@@ -50,6 +50,8 @@ init: ## intialize dotfiles path
 	@$(eval LS_VER := $(shell curl -sL https://releases.hashicorp.com/terraform-ls|grep href=\"/terraform |head -n 1 | awk -F/ '{print $$3}'))
 	@curl -sL https://releases.hashicorp.com/terraform-ls/$(LS_VER)/terraform-ls_$(LS_VER)_linux_amd64.zip -o terraform-ls.zip 2> /dev/null || :
 	@unzip -u terraform-ls.zip && mv terraform-ls .local/bin && rm terraform-ls.zip
+	@echo '==> install govc.'
+	@curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(shell uname -s)_$(shell uname -m).tar.gz" | tar -C .local/bin -xvzf - govc || :
 	@echo '==> modify .bashrc for conda.'
 	@echo ''
 	@grep -q "conda initialize" .bashrc || _CONDA_ROOT=$(HOME)/miniconda ./conda_bashrc.sh
