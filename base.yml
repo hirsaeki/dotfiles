@@ -9,6 +9,7 @@ dependencies:
   - ansible=3.0.0=py38h578d9bd_0
   - ansible-base=2.10.6=pyhd8ed1ab_0
   - appdirs=1.4.4=pyh9f0ad1d_0
+  - argcomplete=1.12.3=pyhd8ed1ab_0
   - astroid=2.5=py38h578d9bd_1
   - autopep8=1.5.5=pyh44b312d_0
   - bcrypt=3.2.0=py38h1e0a361_1
@@ -151,6 +152,7 @@ dependencies:
   - urllib3=1.25.11=py_0
   - wheel=0.35.1=pyhd3eb1b0_0
   - wrapt=1.12.1=py38h25fe258_2
+  - xmltodict=0.12.0=py_0
   - xorg-fixesproto=5.0=h14c3975_1002
   - xorg-inputproto=2.3.2=h14c3975_1002
   - xorg-kbproto=1.0.7=h14c3975_1002
@@ -171,6 +173,7 @@ dependencies:
   - xz=5.2.5=h7b6447c_0
   - yaml=0.2.5=h7b6447c_0
   - yapf=0.30.0=pyh9f0ad1d_0
+  - yq=2.12.2=pyhd8ed1ab_0
   - zip=3.0=h14c3975_1
   - zipp=3.4.0=py_0
   - zlib=1.2.11=h7b6447c_3
