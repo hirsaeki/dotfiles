@@ -1,9 +1,9 @@
 #!/bin/sh
 echo 'pull dotfile repo'
-if [ ! -e ~/.dotfile ]; then
-  mkdir -p ~/.dotfile
-  curl -OL https://github.com/hirsaeki/dotfile/archive/conda.tar.gz | tar -x -C ~/.dotfile --split-component 1
+if [ ! -e ~/.dotfiles ]; then
+  mkdir -p ~/.dotfiles
+  curl -L https://github.com/hirsaeki/dotfile/archive/conda.tar.gz | tar -x -C ~/.dotfiles --split-component 1
 fi
-cd ~/.dotfile
+cd ~/.dotfiles
 echo 'Initialize dotfile'
 ./initialize.sh
