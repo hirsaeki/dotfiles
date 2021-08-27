@@ -1,5 +1,6 @@
 #!/bin/bash
 set -x
+. ./.profile
 for i in $(find ~/miniconda/lib -path "*/tmux/__init__.py"); do
   patch --forward -fs ${i} < ./powerline-status.patch
 done
