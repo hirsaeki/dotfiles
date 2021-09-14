@@ -35,3 +35,5 @@ fi
 export GSETTINGS_SCHEMA_DIR=/usr/share/mate:/usr/share/mate:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 export XDG_DATA_DIRS=/usr/share/mate:/usr/share/mate:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 export EDITOR="vi -u NONE"
+export DENO_INSTALL=$HOME/.deno
+export PATH=$DENO_INSTALL/bin:/home/vagrant/.local/bin:/home/vagrant/.local/bin:/home/vagrant/.local/share/tfenv/bin:/home/vagrant/.local/bin:/home/vagrant/.local/share/tfenv/bin:/home/vagrant/miniconda/bin:/home/vagrant/miniconda/condabin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin

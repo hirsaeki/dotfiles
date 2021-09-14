@@ -10,6 +10,11 @@ done
 
 eval "$(~/miniconda/bin/conda shell.bash hook)"
 
+if ! grep -qF ".deno" $HOME/.profile; then
+  echo "export DENO_INSTALL=\$HOME/.deno" | tee -a $HOME/.profile
+  echo "export PATH=\$DENO_INSTALL/bin:$PATH" | tee -a $HOME/.profile
+fi
+
 /usr/bin/env fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher"
 grep -q theme-agnoster .config/fish/fish_plugins || cat <<EOF >> .config/fish/fish_plugins
 danhper/fish-ssh-agent
