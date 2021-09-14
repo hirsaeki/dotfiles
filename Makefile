@@ -75,9 +75,6 @@ deploy: ## ensure directories and create symlink to home directory
 	@mkdir -p ~/.orig
 	$(foreach val, $(CAND_LINKS), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || mv $(HOME)/$(val) $(HOME)/.orig/$(basename $(val)); ln -sfT $(abspath $(val)) $(HOME)/$(val);)
 	@mv ~/.bash_profile ~/.orig 2> /dev/null || :
-	@echo '===> Restore conda envs'
-	@echo ''
-	@$(foreach val, $(CONDA_ENVS), conda env create -f=$(val).yml 2>/dev/null || :;) 
 	@echo '==> install aws cli'
 	@echo ''
 	@$(foreach val, ~/.local/bin/aws ~/.local/share/aws-cli, rm -rf $(val))
