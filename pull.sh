@@ -1,8 +1,21 @@
-#!/bin/sh
-echo 'pull dotfile repo'
-if [ ! -e ~/.dotfiles ]; then
-  mkdir -p ~/.dotfiles
-  curl -L https://github.com/hirsaeki/dotfiles/archive/conda.tar.gz | tar -xz -C ~/.dotfiles --strip-components 1
+#!/bin/bash
+DOTPATH=$HOME/.dotfile
+GITHUB_URL=https://github.com/hirsaeki/dotfiles
+BRANCH=conda
+TARBALL=https://github.com/hirsaeki/dotfiles/archive/$BRANCH.tar.gz 
+
+if type "git" > /dev/null 2>&1 ; then
+    git clone -b $BRANCH --recursive "$GITHUB_URL" "$DOTPATH"
+elif type "curl" > /dev/null 2>&1 || type "wget"> /dev/null 2>&1 ; then
+    if "curl"> /dev/null 2>&1 ; then
+        curl -L "$TARBALL"
+    elif has "wget" > /dev/null 2>&1 ; then
+      wget -O - "$TARBALL"
+    fi | tar "$TARBALL"
+
+    mv -f dotfile-$BRANCH "$DOTPATH"
+else
+    die "curl or wget required"
 fi
 cd ~/.dotfiles
 echo 'Initialize dotfile'
