@@ -25,7 +25,13 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
+
+if [ -d $HOME/.anyenv ]
+then
+    export PATH="$HOME/.anyenv/bin:$PATH"
+    eval "$(anyenv init -)"
+fi
+
 export GSETTINGS_SCHEMA_DIR=/usr/share/mate:/usr/share/mate:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
 export XDG_DATA_DIRS=/usr/share/mate:/usr/share/mate:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
-export PATH=/home/hsaeki/dotfiles/.local/share/pypy2.7-v7.3.3-linux64/bin/:$PATH
-export PATH=/home/hsaeki/dotfiles/.local/share/pypy3.7-v7.3.3-linux64/bin/:$PATH
+export EDITOR="vi -u NONE"

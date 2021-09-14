@@ -1,18 +1,18 @@
 SHELL      = /bin/bash
-F_CAND     := .??*/ .local/*/ .??*/* .local/*/* .dircolors
-F_DIRS     := %/ .local/%/
-F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .dircolors/% .local/ .local/bin .local/share .local/appimages%
+F_CAND     := .??* ??*/* .local/*/ .local/*/* .config/*/ .config/*/* .config/dein.vim
+F_DIRS     := .vim/ .dircolors/ .local/ .local/%/ .config/ .config/fish/ .config/nvim/ .config/tmux/
+F_EXCL     := .DS_Store .git% .gitmodules .travis.yml .local/appimages% .config/dein.vim/% .config .local .vim 
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 CAND_DIRS  = $(filter $(F_DIRS), $(CANDIDATES))
 CAND_LINKS = $(filter-out $(F_DIRS), $(CANDIDATES))
 GITHUB     := https://github.com
 APPIMAGES := neovim/neovim.nvim
-ALT_APPIMAGES := $(shell curl -sL https://api.github.com/repos/z80oolong/tmux-eaw-appimage/releases/latest | jq -r '.assets[].browser_download_url|select(test("3.1b"))'|tail -n 1)^tmux
 TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
+CONDA_ENVS := nvim nvim3
 
 .DEFAULT_GOAL := help
 
@@ -20,15 +20,15 @@ appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/la
 all:
 
 test:
-	@$(eval ppath := $(abspath $(shell find .local/share -type f -wholename '*pypy2*bin/pypy'|sort|tail -n 1)))
-	@echo 'export PATH=$(dir $(ppath)):$$PATH' >> ~/test
+	@echo "cand ==> $(wildcard $(F_CAND))"
+	@echo "excled cand ==> $(CANDIDATES)"
 
 show: ## show deploy candidates
 	@echo "directories ==> $(CAND_DIRS)"
 	@echo "symlinks ==> $(CAND_LINKS)"
 
 .PHONY: init
-init: ## intialize environment
+init: ## intialize dotfiles path
 	@echo '==> install appimages from github'
 	@echo ''
 	@$(foreach val, $(APPIMAGES),\
@@ -38,43 +38,61 @@ init: ## intialize environment
 		chmod +x .local/appimages/$(notdir $(call appimage-subpath,$(val))) &&\
 		ln -fn $(abspath .local/appimages/$(notdir $(call appimage-subpath,$(val)))) .local/bin/$(call dot-split,$(val),2) ||\
 		: ;)
-	@echo '==> install appimages from alternative sources'
+	@echo '==> install tfenv.'
 	@echo ''
-	@$(foreach val, $(ALT_APPIMAGES),\
-		echo '==> install $(call hat-split,$(val),1)'; \
-		curl -sL $(call hat-split,$(val),1) -o .local/appimages/$(notdir $(call hat-split,$(val),1)) &&\
-		chmod +x .local/appimages/$(notdir $(call hat-split,$(val),1)) &&\
-		ln -fn $(abspath .local/appimages/$(notdir $(call hat-split,$(val),1))) .local/bin/$(call hat-split,$(val),2) ||\
-		: ;)
-	@echo '==> install pypy'
+	@git clone https://github.com/tfutils/tfenv.git .local/share/tfenv 2> /dev/null || :
+	@echo '==> install direnv.'
 	@echo ''
-	@curl -sL $$(curl -s https://www.pypy.org/download.html|grep "href=.*pypy3\..*linux64"|sed 's/.*href=\"\(.*\)\">.*/\1/')|tar -xjf - -C .local/share
-	@curl -sL $$(curl -s https://www.pypy.org/download.html|grep "href=.*pypy2\..*linux64"|sed 's/.*href=\"\(.*\)\">.*/\1/')|tar -xjf - -C .local/share
-	@$(eval ppath := $(abspath $(shell find .local/share -type f -wholename '*pypy2*bin/pypy'|sort|tail -n 1)))
-	@ln -sf $(ppath) .local/bin/python2
-	@fish -c "contains /home/hsaeki/.local/hoge $$fish_user_paths || set --universal --prepend fish_user_paths $(dir $(ppath)); :"
-	@[ -e .profile ] && grep 'export PATH=$(dir $(ppath))' .profile || (echo 'export PATH=$(dir $(ppath)):$$PATH' >> .profile)
-	@$(eval ppath := $(abspath $(shell find .local/share -type f -wholename '*pypy3*bin/pypy3'|sort|tail -n 1)))
-	@ln -sf $(ppath) .local/bin/python3
-	@ln -sf $(ppath) .local/bin/python
-	@fish -c "contains /home/hsaeki/.local/hoge $$fish_user_paths || set --universal --prepend fish_user_paths $(dir $(ppath)); :"
-	@[ -e .profile ] && grep 'export PATH=$(dir $(ppath))' .profile || (echo 'export PATH=$(dir $(ppath)):$$PATH' >> .profile)
-	@[ -e .profile ] && source .profile
+	@curl -sL https://github.com/direnv/direnv/releases/latest/download/direnv.linux-amd64 -o .local/bin/direnv 2> /dev/null || :
+	@chmod +x .local/bin/direnv
+	@echo '==> install terraform-ls.'
+	@echo ''
+	@$(eval LS_VER := $(shell curl -sL https://releases.hashicorp.com/terraform-ls|grep href=\"/terraform |head -n 1 | awk -F/ '{print $$3}'))
+	@curl -sL https://releases.hashicorp.com/terraform-ls/$(LS_VER)/terraform-ls_$(LS_VER)_linux_amd64.zip -o terraform-ls.zip 2> /dev/null || :
+	@unzip -u terraform-ls.zip && mv terraform-ls .local/bin && rm terraform-ls.zip
+	@echo '==> install govc.'
+	@curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(shell uname -s)_$(shell uname -m).tar.gz" | tar -C .local/bin -xvzf - govc || :
+	@echo '==> modify .bashrc for conda.'
+	@echo ''
+	@grep -q "conda initialize" .bashrc || _CONDA_ROOT=$(HOME)/miniconda ./conda_bashrc.sh
+	@echo '==> install tmux plugin manager'
+	@echo ''
+	@git clone https://github.com/tmux-plugins/tpm .tmux/plugins/tpm || :
 	@echo '==> clone dircolors'
 	@echo ''
-	@test ! -d .dircolors && mkdir -p .dircolors && curl -sL https://github.com/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C .dircolors --strip-component=1 --exclude='img' || : ;
+	@test ! -d .dircolors && mkdir -p .dircolors && curl -sL https://github.com/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C .dircolors --strip-component=1 --exclude='img' || :
 
 .PHONY: deploy
-deploy: ## Create symlink to home directory
+deploy: ## ensure directories and create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
 	@echo '==> create directories.'
 	@echo ''
-	@$(foreach val, $(CAND_DIRS), [ -L $${HOME}/$(val:/=) ] && unlink $${HOME}/$(val:/=) || : ;)
-	@mkdir -p $(patsubst %,$${HOME}/%,$(CAND_DIRS))
+	$(foreach val, $(CAND_DIRS), [ -L $(HOME)/$(val:/=) ] && unlink $(HOME)/$(val:/=) || : ;)
+	@mkdir -p $(patsubst %,$(HOME)/%,$(CAND_DIRS))
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
-	@$(foreach val, $(CAND_LINKS), [ -d $${HOME}/$(val) ] && rm -rf $${HOME}/$(val) || [ ! -L $${HOME}/$(val) ] || unlink $${HOME}/$(val); ln -sfT $(abspath $(val)) $${HOME}/$(val);)
+	@mkdir -p ~/.orig
+	$(foreach val, $(CAND_LINKS), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || mv $(HOME)/$(val) $(HOME)/.orig/$(basename $(val)); ln -sfT $(abspath $(val)) $(HOME)/$(val);)
+	@mv ~/.bash_profile ~/.orig 2> /dev/null || :
+	@echo '==> install aws cli'
+	@echo ''
+	@$(foreach val, ~/.local/bin/aws ~/.local/share/aws-cli, rm -rf $(val))
+	@$(eval TMP := $(shell mktemp -d))
+	@curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "$(TMP)/awscliv2.zip" && cd $(TMP) && unzip awscliv2.zip && ./aws/install -i ~/.local/share/aws-cli -b ~/.local/bin || :
+	@rm -rf $(TMP)
+	@echo '==> install aws cli v1'
+	@echo ''
+	@$(foreach val, ~/.local/bin/aws-v1 ~/.local/share/aws-cli-v1, rm -rf $(val))
+	@$(eval TMP := $(shell mktemp -d))
+	@curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli-v1 -b ~/.local/bin/aws-v1 || :
+	@rm -rf $(TMP)
+	@echo '==> aws session manager'
+	@echo ''
+	@$(eval TMP := $(shell mktemp -d))
+	@curl -o $(TMP)/session-manager-plugin.deb -L https://s3.amazonaws.com/session-manager-downloads/plugin/1.2.30.0/ubuntu_64bit/session-manager-plugin.deb
+	@cd $(TMP) && dpkg-deb -x session-manager-plugin.deb session-manager-plugin && cp session-manager-plugin/usr/local/sessionmanagerplugin/bin/session-manager-plugin ~/.local/bin/session-manager-plugin || :
+	@rm -rf $(TMP)
 	@echo '==> execute post deployment script'
 	@echo ''
 	@./post_deploy.sh
@@ -90,3 +108,4 @@ help: ## Self-documented Makefile
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| sort \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+

@@ -10,7 +10,8 @@ set pumblend=10
 
 " set system python path
 " let g:python3_host_prog = '/usr/bin/python3'
-" let g:python_host_prog = '/usr/bin/python2'
+let g:python3_host_prog = expand('~/miniconda/envs/nvim3/bin/python')
+let g:python_host_prog = expand('~/miniconda/envs/nvim/bin/python')
 
 "---------------------------------------------------------------------------
 :
@@ -244,7 +245,7 @@ augroup MyAutoCmd
   autocmd CursorHold *.toml syntax sync minlines=300
 augroup END
 " dein settings {{{
-let g:dein#auto_recache = 1
+let g:dein#auto_recache = 0
 " dein自体の自動インストール
 let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
 let s:config_home = empty($XDG_CONFIG_HOME) ? expand('~/.config') : $XDG_CONFIG_HOME
@@ -287,17 +288,17 @@ endif
 " ======================
 " eskk settings ---
 " ======================
-if filereadable('~/.vim/rc/plugins/azik.rc.vim')
-  exec 'source ' . '~/.vim/rc/plugins/azik.rc.vim'
-endif
-let g:eskk#large_dictionary = '~/SKK-JISYO.L'
-let g:eskk#enable_completion = 1
-let g:eskk#egg_like_newline = 1
-let g:eskk#log_file_level = 4
-let g:eskk#server = {
-\ 'host': 'kuro-box',
-\ 'port': 1178,
-\}
+"if filereadable('~/.vim/rc/plugins/azik.rc.vim')
+"  exec 'source ' . '~/.vim/rc/plugins/azik.rc.vim'
+"endif
+"let g:eskk#large_dictionary = '~/.SKK-JISYO.L'
+"let g:eskk#enable_completion = 1
+"let g:eskk#egg_like_newline = 1
+"let g:eskk#log_file_level = 4
+"let g:eskk#server = {
+"\ 'host': 'kuro-box',
+"\ 'port': 1178,
+"\}
 
 augroup TransparentBG
   autocmd!
@@ -339,4 +340,22 @@ endif
 if has('conceal')
   set conceallevel=1 concealcursor=
   let g:vim_json_syntax_conceal = 0
+endif
+
+"タブ、空白、改行の可視化
+set list
+set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
+
+"全角スペースをハイライト表示
+function! ZenkakuSpace()
+    highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
+endfunction
+   
+if has('syntax')
+    augroup ZenkakuSpace
+        autocmd!
+        autocmd ColorScheme       * call ZenkakuSpace()
+        autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+    augroup END
+    call ZenkakuSpace()
 endif
