@@ -1,5 +1,5 @@
 #!/bin/bash
-DOTPATH=$HOME/.dotfile
+DOTPATH=$HOME/.dotfiles
 GITHUB_URL=https://github.com/hirsaeki/dotfiles
 BRANCH=conda
 TARBALL=https://github.com/hirsaeki/dotfiles/archive/$BRANCH.tar.gz 
@@ -17,6 +17,6 @@ elif type "curl" > /dev/null 2>&1 || type "wget"> /dev/null 2>&1 ; then
 else
     die "curl or wget required"
 fi
-cd ~/.dotfiles
+cd $DOTPATH
 echo 'Initialize dotfile'
 ./initialize.sh
