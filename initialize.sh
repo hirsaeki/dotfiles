@@ -1,9 +1,9 @@
 #!/bin/sh
 echo '==> Start to deploy miniconda.'
 echo ''
-if [ ! -e ~/miniconda/bin/conda ]; then
+if ! type "conda" > /dev/null 2>&1 ;then
   curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ./miniconda.sh
-  bash ./miniconda.sh -b -p ${HOME}/miniconda > /dev/null 2>&1 || :
+  bash ./miniconda.sh -b -p ${HOME}/miniconda
 fi
 echo '==> create bashrc from template'
 echo ''
