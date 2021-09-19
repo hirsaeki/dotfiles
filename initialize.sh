@@ -7,12 +7,16 @@ if ! type "conda" > /dev/null 2>&1 ;then
 fi
 echo '==> create bashrc from template'
 echo ''
-cp bashrc.tpl .bashrc
+cp _bashrc .bashrc
 echo '==> conda initialize'
 echo ''
 grep -q "conda initialize" ~/.bashrc || _CONDA_ROOT=${HOME}/miniconda ./conda_bashrc.sh
 eval "$(~/miniconda/bin/conda shell.bash hook)"
-echo '==> restore conda base.'
+echo '==> restore conda base environment.'
 conda env update -f=base.yml
+canda config --add channels conda-forge
+canda config --set channel_priority strict
+conda update --all
+conda clean --all
 make init
 make deploy

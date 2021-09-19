@@ -315,3 +315,4 @@ dependencies:
   - zope.event=4.5.0=py38_0
   - zope.interface=5.1.2=py38h7b6447c_0
   - zstd=1.4.5=h9ceee32_0
+prefix: /home/vagrant/miniconda/envs/nvim3

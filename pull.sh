@@ -7,16 +7,16 @@ TARBALL=https://github.com/hirsaeki/dotfiles/archive/$BRANCH.tar.gz
 if type "git" > /dev/null 2>&1 ; then
     git clone -b $BRANCH --recursive "$GITHUB_URL" "$DOTPATH"
 elif type "curl" > /dev/null 2>&1 || type "wget"> /dev/null 2>&1 ; then
-    if "curl"> /dev/null 2>&1 ; then
+    if type "curl"> /dev/null 2>&1 ; then
         curl -L "$TARBALL"
-    elif has "wget" > /dev/null 2>&1 ; then
+    elif type "wget" > /dev/null 2>&1 ; then
       wget -O - "$TARBALL"
-    fi | tar "$TARBALL"
+    fi | tar -zx 
 
-    mv -f dotfile-$BRANCH "$DOTPATH"
+    mv -f dotfiles-$BRANCH "$DOTPATH"
 else
     die "curl or wget required"
 fi
 cd $DOTPATH
-echo 'Initialize dotfile'
+echo 'Initialize environment'
 ./initialize.sh
