@@ -14,8 +14,8 @@ grep -q "conda initialize" ~/.bashrc || _CONDA_ROOT=${HOME}/miniconda ./conda_ba
 eval "$(~/miniconda/bin/conda shell.bash hook)"
 echo '==> restore conda base environment.'
 conda env update -f=base.yml
-canda config --add channels conda-forge
-canda config --set channel_priority strict
+conda config --add channels conda-forge
+conda config --set channel_priority strict
 conda update --all
 conda clean --all
 make init
