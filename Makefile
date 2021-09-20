@@ -12,7 +12,7 @@ TERMINFO_DIRS := /lib/terminfo /etc/terminfo /usr/share/terminfo
 dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I') 
-CONDA_ENVS := nvim nvim3
+CONDA_ENVS := py2nvim^2 py3nvim^3
 
 .DEFAULT_GOAL := help
 
@@ -75,9 +75,9 @@ deploy: ## ensure directories and create symlink to home directory
 	@mkdir -p ~/.orig
 	$(foreach val, $(CAND_LINKS), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || mv $(HOME)/$(val) $(HOME)/.orig/$(basename $(val)); ln -sfT $(abspath $(val)) $(HOME)/$(val);)
 	@mv ~/.bash_profile ~/.orig 2> /dev/null || :
-	@echo '===> Restore additional conda envs'
+	@echo '===> create conda envs for neovim'
 	@echo ''
-	@$(foreach val, $(CONDA_ENVS), conda env create -f=$(val).yml 2>/dev/null || :;)
+	@$(foreach val, $(CONDA_ENVS), conda create -n $(call hat-split,$(val),1) python=$(call hat-split,$(val),2) && conda activate $(call hat-split,$(val),1) && conda install -y pynvim || :)
 	@echo '==> install aws cli'
 	@echo ''
 	@$(foreach val, ~/.local/bin/aws ~/.local/share/aws-cli, rm -rf $(val))
@@ -96,8 +96,6 @@ deploy: ## ensure directories and create symlink to home directory
 	@curl -o $(TMP)/session-manager-plugin.deb -L https://s3.amazonaws.com/session-manager-downloads/plugin/1.2.30.0/ubuntu_64bit/session-manager-plugin.deb
 	@cd $(TMP) && dpkg-deb -x session-manager-plugin.deb session-manager-plugin && cp session-manager-plugin/usr/local/sessionmanagerplugin/bin/session-manager-plugin ~/.local/bin/session-manager-plugin || :
 	@rm -rf $(TMP)
-	@echo '==> install ddc'
-	@curl -fsSL https://deno.land/x/install/install.sh | sh
 	@echo '==> execute post deployment script'
 	@echo ''
 	@./post_deploy.sh

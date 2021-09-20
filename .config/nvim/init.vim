@@ -10,8 +10,8 @@ set pumblend=10
 
 " set system python path
 " let g:python3_host_prog = '/usr/bin/python3'
-let g:python3_host_prog = expand('~/miniconda/envs/nvim3/bin/python')
-let g:python_host_prog = expand('~/miniconda/envs/nvim/bin/python')
+let g:python3_host_prog = expand('~/miniconda/envs/py3nvim/bin/python')
+let g:python_host_prog = expand('~/miniconda/envs/py2nvim/bin/python')
 
 "---------------------------------------------------------------------------
 :
