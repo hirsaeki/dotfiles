@@ -66,6 +66,17 @@ init: ## intialize dotfiles path
 deploy: ## ensure directories and create symlink to home directory
 	@echo '==> Start to deploy dotfiles to home directory.'
 	@echo ''
+	@echo '==> install deno'
+	@$(eval GLIBVER := $(shell printf $$(ldd --version|awk 'NR==1 {print $$NF}')'\n2.18' | sort -V |head -n 1))
+	if [[ "$(GLIBVER)" == "2.18" ]]; then \
+	echo '==> install binary'; \
+	curl -fsSL https://deno.land/x/install/install.sh | sh; \
+	else \
+	echo '==> install by rust'; \
+	conda install -y rust; \
+	conda clean --all; \
+	cargo install deno --locked; \
+	fi
 	@echo '==> create directories.'
 	@echo ''
 	$(foreach val, $(CAND_DIRS), [ -L $(HOME)/$(val:/=) ] && unlink $(HOME)/$(val:/=) || : ;)
@@ -96,8 +107,6 @@ deploy: ## ensure directories and create symlink to home directory
 	@curl -o $(TMP)/session-manager-plugin.deb -L https://s3.amazonaws.com/session-manager-downloads/plugin/1.2.30.0/ubuntu_64bit/session-manager-plugin.deb
 	@cd $(TMP) && dpkg-deb -x session-manager-plugin.deb session-manager-plugin && cp session-manager-plugin/usr/local/sessionmanagerplugin/bin/session-manager-plugin ~/.local/bin/session-manager-plugin || :
 	@rm -rf $(TMP)
-	@echo '==> install ddc'
-	@curl -fsSL https://deno.land/x/install/install.sh | sh
 	@echo '==> execute post deployment script'
 	@echo ''
 	@./post_deploy.sh
