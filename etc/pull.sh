@@ -19,4 +19,3 @@ else
 fi
 cd $DOTPATH
 echo 'Initialize environment'
-./initialize.sh
