@@ -1,6 +1,6 @@
 SHELL      = /bin/bash
 F_CAND     := .??*
-F_DIRS     := .local/bin .local/share
+DIRS       := .local/bin .local/share
 F_EXCL     := .DS_Store .git .gitmodules .travis.yml
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
@@ -23,7 +23,7 @@ test:
 
 .PHONY: show
 show: ## show deploy candidates
-	@echo "directories ==> $(F_DIRS)"
+	@echo "directories ==> $(DIRS)"
 	@echo "links ==> $(CANDIDATES)"
 
 .PHONY: init
@@ -41,7 +41,7 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo ''
 	@echo '==> create directories.'
 	@echo ''
-	@cd $(HOME) && mkdir -p $(CAND_DIRS)
+	@cd $(HOME) && mkdir -p $(DIRS)
 	@echo '==> deploy dotfiles to home.'
 	@echo ''
 	@echo '==> preserve original dotfiles'
