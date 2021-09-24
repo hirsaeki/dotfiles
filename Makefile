@@ -23,8 +23,8 @@ test:
 
 .PHONY: show
 show: ## show deploy candidates
-	@echo "directories ==> $(CAND_DIRS)"
-	@echo "symlinks ==> $(CAND_LINKS)"
+	@echo "directories ==> $(F_DIRS)"
+	@echo "links ==> $(CANDIDATES)"
 
 .PHONY: init
 init: ## intialize dotfiles realpath

@@ -1,8 +1,0 @@
-.zshrc_local
-.zsh/.zcompdump
-_Makefile
-.local/share/*
-.bashrc
-!.local/share/.gitkeep
-/miniconda.sh
-/terraform-ls.zip
