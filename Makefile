@@ -50,7 +50,7 @@ deploy: ## ensure directories and create symlink to home directory
 	@if [ -z "$$(ls -A $(HOME)/.default_dotfiles.d)" ]; then \
 		$(foreach val, $(CANDIDATES), if [ -L $(HOME)/$(val) ]; then unlink $(HOME)/$(val); elif [ -e $(HOME)/$(val) ]; then mv $(HOME)/$(val) $(HOME)/.default_dotfiles.d; fi;) \
 		else \
-		$(foreach val, $(CANDIDATES), rm -rf $(HOME)/$(val)); \
+		$(foreach val, $(CANDIDATES), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || rm -rf $(HOME)/$(val)); \
 		fi
 	@ln -sfn $(CANDIDATES) $(HOME)/
 	@echo '==> install appimages from github'
