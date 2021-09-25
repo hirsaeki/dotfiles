@@ -73,7 +73,7 @@ deploy: ## ensure directories and create symlink to home directory
 conda-base: ## initialize base env via miniconda+conda-forge with essential package. e.g. fish, tmux
 	@echo '==> install miniconda'
 	@echo ''
-	@if ! type conda > /dev/null 2>&1; then \
+	@if [ ! -d ~/miniconda ]; then \
 		curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ./miniconda.sh && \
 		bash ./miniconda.sh -b -p $(HOME)/miniconda && \
 		eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
@@ -91,20 +91,20 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 	@echo '==> setup powerline-status'
 	@echo ''
 	@for i in $$(find $(HOME)/miniconda/lib -path "*/powerline/bindings/tmux/__init__.py"); do \
-		patch --forward -fs $${i} < ./etc/powerline-status.patch; \
+		patch --forward -fs $${i} < ./etc/powerline-status.patch || :; \
 		done;
 	@for i in $$(find $(HOME)/miniconda/lib -path "*/powerline/bindings/tmux/powerline.conf"); do \
-		sed -i '/tmux\/powerline.conf/s#.*#source '$${i}'#' $(HOME)/.config/tmux/tmux.conf; \
+		sed -i '/tmux\/powerline.conf/s#.*#source '$${i}'#' $(HOME)/.config/tmux/tmux.conf || :; \
 		done
 	@echo '==> setup fish'
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
-		conda init fish && \
-		/usr/bin/env fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher" && \
-		/usr/bin/env fish -c "fisher update" && \
-		patch --forward -fs ~/.config/fish/functions/fish_prompt.fish < ./etc/fish_prompt.patch && \
+		conda init fish; \
+		/usr/bin/env fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher"; \
+		/usr/bin/env fish -c "fisher update";  \
 		/usr/bin/env fish -c "abbr -a vi nvim"; \
-		/usr/bin/env fish -c "abbr -a vie nvim -u $(HOME)/.config/nvim/essential.nvim"; 
+		/usr/bin/env fish -c "abbr -a vie nvim -u $(HOME)/.config/nvim/essential.nvim"; \
+		patch --forward -fs ~/.config/fish/functions/fish_prompt.fish < ./etc/fish_prompt.patch || :
 	@echo '===> create additional conda envs for nvim'
 	@echo ''
 	@$(foreach val, $(CONDA_ENVS), conda create -y -n $(call hat-split,$(val),1) python=$(call hat-split,$(val),2);)
