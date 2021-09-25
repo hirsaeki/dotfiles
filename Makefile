@@ -61,8 +61,8 @@ deploy: ## ensure directories and create symlink to home directory
 		echo '==> install $(call dot-split,$(val),1)'; \
 		echo '==> appimage is $(call appimage-subpath,$(val))'; \
 		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$(call appimage-subpath,$(val)) -o $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) && \
-		chmod +x $(HOME)/.local/appimages/$(notdir $(call appimage-subpath,$(val))) && \
-		ln -sfn $(HOME)/.local/appimages/$(notdir $(call appimage-subpath,$(val))) $(HOME)/.local/bin/$(call dot-split,$(val),2) || :; \
+		chmod +x $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) && \
+		ln -sfn $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) $(HOME)/.local/bin/$(call dot-split,$(val),2); \
 		fi;)
 	@echo '==> install direnv.'
 	@echo ''
