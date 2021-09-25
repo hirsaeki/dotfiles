@@ -52,7 +52,7 @@ deploy: ## ensure directories and create symlink to home directory
 		else \
 		$(foreach val, $(CANDIDATES), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || rm -rf $(HOME)/$(val);) \
 		fi
-	@ln -sfn $(CANDIDATES) $(HOME)/
+	@$(foreach val, $(CANDIDATES), ln -sfn $(realpath $(val)) $(HOME);)
 	@echo '==> install appimages from github'
 	@echo ''
 	@mkdir -p $(HOME)/.local/appimages
