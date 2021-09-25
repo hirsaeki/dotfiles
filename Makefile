@@ -48,7 +48,7 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo ''
 	@mkdir -p $(HOME)/.default_dotfiles.d
 	@if [ -z "$$(ls -A $(HOME)/.default_dotfiles.d)" ]; then \
-		$(foreach val, $(CANDIDATES), if [ -L $(HOME)/$(val) ]; then unlink $(HOME)/$(val); elif [ -e $(HOME)/$(val) ]; mv $(HOME)/$(val) $(HOME)/.default_dotfiles.d; fi;) \
+		$(foreach val, $(CANDIDATES), if [ -L $(HOME)/$(val) ]; then unlink $(HOME)/$(val); elif [ -e $(HOME)/$(val) ]; then mv $(HOME)/$(val) $(HOME)/.default_dotfiles.d; fi;) \
 		else \
 		rm -rf $(CANDIDATES); \
 		fi
