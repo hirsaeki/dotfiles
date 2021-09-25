@@ -73,7 +73,7 @@ deploy: ## ensure directories and create symlink to home directory
 conda-base: ## initialize base env via miniconda+conda-forge with essential package. e.g. fish, tmux
 	@echo '==> install miniconda'
 	@echo ''
-	@if ! type conda > /dev/null 2>&1; then \
+	@if [ ! type conda > /dev/null 2>&1 ] then \
 		curl -L https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o ./miniconda.sh && \
 		bash ./miniconda.sh -b -p $(HOME)/miniconda && \
 		eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
@@ -83,10 +83,11 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 		conda update --all -y && \
 		conda install -y $(CONDA_PKGS) && \
 		conda clean --all -y && \
-		rm ./miniconda.sh
+		rm ./miniconda.sh; \
+		fi
 	@echo '==> install tmux plugin manager'
 	@echo ''
-	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && git clone $(GITHUB)/tmux-plugins/tpm $${HOME}/.config/tmux/plugins/tpm || :
+	@[ ! -e $(HOME)/.config/tmux/plugins/tpm/tpm ] && eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && git clone $(GITHUB)/tmux-plugins/tpm $(HOME)/.config/tmux/plugins/tpm || :
 	@echo '==> setup powerline-status'
 	@echo ''
 	@for i in $$(find $(HOME)/miniconda/lib -path "*/powerline/bindings/tmux/__init__.py"); do \
@@ -103,6 +104,7 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 		/usr/bin/env fish -c "fisher update" && \
 		patch --forward -fs ~/.config/fish/functions/fish_prompt.fish < ./etc/fish_prompt.patch && \
 		/usr/bin/env fish -c "abbr -a vi nvim"; \
+		/usr/bin/env fish -c "abbr -a vie nvim -u $(HOME)/.config/nvim/essential.nvim"; 
 	@echo '===> create additional conda envs'
 	@echo ''
 	@$(foreach val, $(CONDA_ENVS), conda create -y -n $(call hat-split,$(val),1) python=$(call hat-split,$(val),2);)
