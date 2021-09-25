@@ -1,7 +1,7 @@
 SHELL      = /bin/bash
 F_CAND     := .??*
 DIRS       := .local/bin .local/share
-F_EXCL     := .DS_Store .git .gitmodules .travis.yml
+F_EXCL     := .DS_Store .git .gitignore .gitmodules .travis.yml
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 GITHUB     := https://github.com
