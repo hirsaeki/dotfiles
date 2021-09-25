@@ -164,8 +164,9 @@ infra-tools: ## install infra-tools
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo
-	@echo 'Remove dot files in your home directory...'
-	@$(foreach val, $(CAND_LINKS), rm -vrf $(HOME)/$(val);)
+	@echo 'Remove symlinks in your home directory...'
+	@$(foreach val, $(CANDIDATES), rm -vrf $(HOME)/$(val);)
+	@echo 'Remove self...'
 	@rm -rf $(DOTPATH)
 
 .PHONY: help
