@@ -18,7 +18,7 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 # for x2go
-if type x2goagent ; then
+if type x2goagent 2> /dev/null ; then
   XDG_DATA_DIRS=/usr/share/mate:/usr/share/mate:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
   GSETTINGS_SCHEMA_DIR=$XDG_DATA_DIRS
   export XDG_DATA_DIRS GSETTINGS_SCHEMA_DIR
