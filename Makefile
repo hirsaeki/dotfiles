@@ -12,6 +12,7 @@ appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/la
 CONDA_NVIM_ENVS := py2nvim^2 py3nvim^3
 CONDA_PKGS := git fish tmux powerline-status jq yq unzip
 FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-agnoster jethrokuan/fzf
+TFENVS := 
 
 .DEFAULT_GOAL := help
 
@@ -110,8 +111,9 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 		patch --forward -fs ~/.config/fish/functions/fish_prompt.fish < ./etc/fish_prompt.patch || :
 	@echo '===> create additional conda envs for nvim'
 	@echo ''
-	@$(foreach val, $(CONDA_ENVS), conda create -y -n $(call hat-split,$(val),1) python=$(call hat-split,$(val),2);)
-	@eval "$$(conda shell.bash hook)" && $(foreach val, $(CONDA_ENVS), conda activate $(call hat-split,$(val),1) && conda install -y pynvim && conda deactivate;)
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		$(foreach val, $(CONDA_NVIM_ENVS), conda create -y -n $(call hat-split,$(val),1) python=$(call hat-split,$(val),2);) \
+		$(foreach val, $(CONDA_NVIM_ENVS), conda activate $(call hat-split,$(val),1) && conda install -y pynvim && conda deactivate;)
 
 .PHONY: aws-tools
 aws-tools: ## initialize aws-tools
@@ -125,7 +127,7 @@ aws-tools: ## initialize aws-tools
 	@echo '==> set v1 completion on fish'
 	@echo ''
 	@grep -q "miniconda/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
-		echo "complete --command awsv1 --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); \$${HOME}/miniconda/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
+		echo "complete --command awsv1 --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/miniconda/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws cli v2 <amazon recommends not to use package manager like pip for v2>)'
 	@echo ''
 	@rm -rf .local/bin/aws .local/share/aws-cli
@@ -137,7 +139,7 @@ aws-tools: ## initialize aws-tools
 	@echo '==> set v2 completion on fish'
 	@echo ''
 	@grep -q "\.local/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
-		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); \$${HOME}/.local/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
+		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws session-manager-plugin'
 	@echo ''
 	@$(eval TMP := $(shell mktemp -d))
@@ -153,17 +155,20 @@ aws-tools: ## initialize aws-tools
 infra-tools: ## install infra-tools
 	@echo '==> install tfenv'
 	@echo ''
-	@git clone $(GITHUB)/tfutils/tfenv.git $(HOME)/.local/share/tfenv 2> /dev/null || :
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		git clone $(GITHUB)/tfutils/tfenv.git $(HOME)/.local/share/tfenv 2> /dev/null || :
 	@ln -sfn $(HOME)/.local/share/tfenv/bin/* $(HOME)/.local/bin
 	@echo '==> install tgenv'
 	@echo ''
-	@git clone $(GITHUB)/cunymatthieu/tgenv.git $(HOME)/.local/share/tgenv 2> /dev/null || :
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		git clone $(GITHUB)/cunymatthieu/tgenv.git $(HOME)/.local/share/tgenv 2> /dev/null || :
 	@ln -sfn $(HOME)/.local/share/tgenv/bin/* $(HOME)/.local/bin
 	@echo '==> install terraform-ls.'
 	@echo ''
 	@$(eval LS_VER := $(shell curl -sL https://releases.hashicorp.com/terraform-ls|grep href=\"/terraform |head -n 1 | awk -F/ '{print $$3}'))
 	@curl -sL https://releases.hashicorp.com/terraform-ls/$(LS_VER)/terraform-ls_$(LS_VER)_linux_amd64.zip -o terraform-ls.zip 2> /dev/null || :
-	@unzip -u terraform-ls.zip && mv terraform-ls $(HOME)/.local/bin && rm terraform-ls.zip
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		unzip -u terraform-ls.zip && mv terraform-ls $(HOME)/.local/bin && rm terraform-ls.zip
 	@echo '==> install govc.'
 	@curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(shell uname -s)_$(shell uname -m).tar.gz" | tar -C $(HOME)/.local/bin -xvzf - govc || :
 
