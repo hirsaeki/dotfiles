@@ -99,6 +99,7 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 	@echo '==> setup fish'
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		source $(HOME)/.profile; \
 		conda init fish; \
 		/usr/bin/env fish -c "curl -sL https://git.io/fisher | source && fisher install jorgebucaran/fisher"; \
 		/usr/bin/env fish -c "fisher update";  \

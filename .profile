@@ -14,3 +14,11 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
+
+if type vi > /dev/null 2>&1; then
+  export EDITOR="vi"
+fi
+
+if ! type less > /dev/null 2>&1; then
+  export PAGER="less"
+fi
