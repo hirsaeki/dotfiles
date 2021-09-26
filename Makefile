@@ -144,7 +144,7 @@ aws-tools: ## initialize aws-tools
 	@echo ''
 	@$(eval TMP := $(shell mktemp -d))
 	@curl -o $(TMP)/session-manager-plugin.deb -L https://s3.amazonaws.com/session-manager-downloads/plugin/latest/ubuntu_64bit/session-manager-plugin.deb
-	@cd $(TMP) && ar p session-manager-plugin.deb data.tar.gz | tar -zx && cp session-manager-plugin/usr/local/sessionmanagerplugin/bin/session-manager-plugin $(HOME)/.local/bin/session-manager-plugin || :;
+	@ar p $(TMP)/session-manager-plugin.deb data.tar.gz | tar -C $(TMP) -zx && cp $(TMP)/usr/local/sessionmanagerplugin/bin/session-manager-plugin $(HOME)/.local/bin/session-manager-plugin;
 	@rm -rf $(TMP)
 	@echo '==> install aws-mfa via pip on conda'
 	@echo ''
