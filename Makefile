@@ -10,7 +10,7 @@ dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I')
 CONDA_NVIM_ENVS := py2nvim^2 py3nvim^3
-CONDA_PKGS := git fish tmux powerline-status jq yq unzip
+CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch
 FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-agnoster jethrokuan/fzf
 TFENVS := 
 
@@ -117,17 +117,17 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 
 .PHONY: aws-tools
 aws-tools: ## initialize aws-tools
-	@echo '==> install awscli v1 via conda'
+	@echo '==> install aws cli v1'
 	@echo ''
-	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
-		conda install -y awscli
-	@echo '==> create symlink as awsv1'
-	@echo ''
-	@ln -sfn $(HOME)/miniconda/bin/aws $(HOME)/.local/bin/awsv1
+	@$(foreach val, ~/.local/bin/awsv1 ~/.local/share/aws-cli/v1, rm -rf $(val))
+	@$(eval TMP := $(shell mktemp -d))
+	@curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli/v1 -b ~/.local/bin/awsv1 || :
+	@rm -rf $(TMP)
+	@exec 1
 	@echo '==> set v1 completion on fish'
 	@echo ''
 	@grep -q "miniconda/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
-		echo "complete --command awsv1 --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/miniconda/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
+		echo "complete --command awsv1 --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v1/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws cli v2 <amazon recommends not to use package manager like pip for v2>)'
 	@echo ''
 	@rm -rf .local/bin/aws .local/share/aws-cli
@@ -139,7 +139,7 @@ aws-tools: ## initialize aws-tools
 	@echo '==> set v2 completion on fish'
 	@echo ''
 	@grep -q "\.local/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
-		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
+		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v2/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws session-manager-plugin'
 	@echo ''
 	@$(eval TMP := $(shell mktemp -d))
