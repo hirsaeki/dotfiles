@@ -57,8 +57,8 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo '==> install appimages from github'
 	@echo ''
 	@mkdir -p $(HOME)/.local/appimages
-	@$(foreach val, $(APPIMAGES),\
-		if ! type $(call dot-split,$(val),2); then \
+	@$(foreach val, $(APPIMAGES), \
+		if ! type $(call dot-split,$(val),2) > /dev/null 2>&1; then \
 		echo '==> install $(call dot-split,$(val),1)'; \
 		echo '==> appimage is $(call appimage-subpath,$(val))'; \
 		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$(call appimage-subpath,$(val)) -o $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) && \
@@ -122,12 +122,11 @@ aws-tools: ## initialize aws-tools
 	@$(foreach val, ~/.local/bin/awsv1 ~/.local/share/aws-cli/v1, rm -rf $(val))
 	@$(eval TMP := $(shell mktemp -d))
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
-		curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli/v1 -b ~/.local/bin/awsv1 || :
+		curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli/v1 -b ~/.local/bin/awsv1
 	@rm -rf $(TMP)
-	@exec 1
 	@echo '==> set v1 completion on fish'
 	@echo ''
-	@grep -q "miniconda/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
+	@grep -q "v2/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
 		echo "complete --command awsv1 --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v1/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws cli v2 <amazon recommends not to use package manager like pip for v2>)'
 	@echo ''
@@ -135,11 +134,11 @@ aws-tools: ## initialize aws-tools
 	@$(eval TMP := $(shell mktemp -d))
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
 		curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "$(TMP)/awscliv2.zip" && cd $(TMP) && \
-		unzip awscliv2.zip && ./aws/install -i ~/.local/share/aws-cli -b ~/.local/bin || :
+		unzip awscliv2.zip && ./aws/install -i ~/.local/share/aws-cli -b ~/.local/bin
 	@rm -rf $(TMP)
 	@echo '==> set v2 completion on fish'
 	@echo ''
-	@grep -q "\.local/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
+	@grep -q "v2/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
 		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v2/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws session-manager-plugin'
 	@echo ''
@@ -157,7 +156,7 @@ infra-tools: ## install infra-tools
 	@echo '==> install tfenv'
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
-		git clone $(GITHUB)/tfutils/tfenv.git $(HOME)/.local/share/tfenv 2> /dev/null || :
+		git clone $(GITHUB)/tfutils/tfenv.git $(HOME)/.local/share/tfenv 2> /dev/null
 	@ln -sfn $(HOME)/.local/share/tfenv/bin/* $(HOME)/.local/bin
 	@echo '==> install tgenv'
 	@echo ''
