@@ -121,7 +121,8 @@ aws-tools: ## initialize aws-tools
 	@echo ''
 	@$(foreach val, ~/.local/bin/awsv1 ~/.local/share/aws-cli/v1, rm -rf $(val))
 	@$(eval TMP := $(shell mktemp -d))
-	@curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli/v1 -b ~/.local/bin/awsv1 || :
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "$(TMP)/awscli-bundle.zip" && cd $(TMP) && unzip awscli-bundle.zip && ./awscli-bundle/install -i ~/.local/share/aws-cli/v1 -b ~/.local/bin/awsv1 || :
 	@rm -rf $(TMP)
 	@exec 1
 	@echo '==> set v1 completion on fish'
