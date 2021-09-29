@@ -126,7 +126,7 @@ aws-tools: ## initialize aws-tools
 	@rm -rf $(TMP)
 	@echo '==> set v1 completion on fish'
 	@echo ''
-	@grep -q "v2/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
+	@grep -q "v1/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
 		echo "complete --command awsv1 --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v1/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws cli v2 <amazon recommends not to use package manager like pip for v2>)'
 	@echo ''
@@ -138,8 +138,8 @@ aws-tools: ## initialize aws-tools
 	@rm -rf $(TMP)
 	@echo '==> set v2 completion on fish'
 	@echo ''
-	@grep -q "v2/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
-		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v2/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
+	@grep -q "v2/current/bin/aws_completer" $(HOME)/.config/fish/config.fish || \
+		echo "complete --command aws --no-files --arguments '(begin; set --local --export COMP_SHELL fish; set --local --export COMP_LINE (commandline); $(HOME)/.local/share/aws-cli/v2/current/bin/aws_completer | sed \'s/ $$//\'; end)'" >> $(HOME)/.config/fish/config.fish
 	@echo '==> install aws session-manager-plugin'
 	@echo ''
 	@$(eval TMP := $(shell mktemp -d))
