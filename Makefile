@@ -10,7 +10,7 @@ dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I')
 CONDA_NVIM_ENVS := py2nvim^2 py3nvim^3
-CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch
+CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch fzf
 FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-agnoster jethrokuan/fzf
 TFENVS := 
 
@@ -171,6 +171,18 @@ infra-tools: ## install infra-tools
 		unzip -u terraform-ls.zip && mv terraform-ls $(HOME)/.local/bin && rm terraform-ls.zip
 	@echo '==> install govc.'
 	@curl -L -o - "https://github.com/vmware/govmomi/releases/latest/download/govc_$(shell uname -s)_$(shell uname -m).tar.gz" | tar -C $(HOME)/.local/bin -xvzf - govc || :
+
+.PHONY: ddc-vim
+ddc-vim: ## install deno
+	@echo '==> install deno'
+	@echo ''
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		if [ "$(printf '2.18\n'$(ldd --version | awk 'NR==1 { print $NF }')|sort -V|head -n 1)" = "2.18" ]; then \
+		curl -fsSL https://deno.land/x/install/install.sh | sh; \
+		else \
+		mkdir -p $(HOME)/.deno/bin; cd $(HOME)/.deno/bin; curl -L https://github.com/hayd/deno-lambda/releases/download/1.6.0/amz-deno.gz | gunzip -c;
+		fi;
+		ln -s $(HOME)/.deno/bin/deno $(HOME)/.local/bin
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo
