@@ -5,6 +5,10 @@ if type x2goagent 2> /dev/null ; then
   export XDG_DATA_DIRS GSETTINGS_SCHEMA_DIR
 fi
 
+if [ -d "$HOME/.local/share/nextword-data" ]; then
+  export NEXTWORD_DATA_PATH="$HOME/.local/share/nextword-data"
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"

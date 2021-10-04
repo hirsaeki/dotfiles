@@ -12,6 +12,7 @@ appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/la
 CONDA_NVIM_ENVS := py2nvim^2 py3nvim^3
 CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch fzf
 FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-agnoster jethrokuan/fzf
+NEXTWORD_TAG:= small
 TFENVS := 
 
 .DEFAULT_GOAL := help
@@ -157,12 +158,12 @@ infra-tools: ## install infra-tools
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
 		git clone $(GITHUB)/tfutils/tfenv.git $(HOME)/.local/share/tfenv 2> /dev/null
-	@ln -sfn $(HOME)/.local/share/tfenv/bin/* $(HOME)/.local/bin
+	@ln -sfn $(HOME)/.local/share/tfenv/bin/* $(HOME)/.local/bin || :
 	@echo '==> install tgenv'
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
 		git clone $(GITHUB)/cunymatthieu/tgenv.git $(HOME)/.local/share/tgenv 2> /dev/null || :
-	@ln -sfn $(HOME)/.local/share/tgenv/bin/* $(HOME)/.local/bin
+	@ln -sfn $(HOME)/.local/share/tgenv/bin/* $(HOME)/.local/bin || :
 	@echo '==> install terraform-ls.'
 	@echo ''
 	@$(eval LS_VER := $(shell curl -sL https://releases.hashicorp.com/terraform-ls|grep href=\"/terraform |head -n 1 | awk -F/ '{print $$3}'))
@@ -182,7 +183,17 @@ ddc-vim: ## install deno
 		else \
 		mkdir -p $(HOME)/.deno/bin; curl -L https://github.com/hayd/deno-lambda/releases/download/1.6.0/amz-deno.gz | gunzip -c > $(HOME)/.deno/bin/deno; chmod +x $(HOME)/.deno/bin/deno; \
 		fi; \
-		ln -s $(HOME)/.deno/bin/deno $(HOME)/.local/bin
+		ln -sfn $(HOME)/.deno/bin/deno $(HOME)/.local/bin/deno
+	@echo '==> install nextword-data'
+	@echo ''
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		curl -sL https://github.com/high-moctane/nextword-data/archive/refs/tags/$(NEXTWORD_TAG).tar.gz | tar -C $(HOME)/.local/share -xz; \
+		mv $(HOME)/.local/share/nextword-data-$(NEXTWORD_TAG) $(HOME)/.local/share/nextword-data;
+	@echo '==> install nextword'
+	@echo ''
+	@$(eval DLPATH := $(shell curl -sL https://github.com/high-moctane/nextword/releases/latest|grep -i "href.*nextword.*_linux_amd64.tar.gz\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\_amd64.tar.gz\).*:\1:I'))
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
+		curl -sL $(GITHUB)/high-moctane/nextword/releases/download/$(DLPATH) | tar -C $(HOME)/.local/bin -xz nextword
 
 .PHONY: clean
 clean: ## Remove the dot files and this repo

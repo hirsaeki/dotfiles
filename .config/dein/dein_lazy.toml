@@ -15,3 +15,7 @@ on_source = 'ddc.vim'
 [[plugins]]
 repo = 'Shougo/ddc-sorter_rank'
 on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-nextword'
+on_source = 'ddc.vim'
