@@ -177,11 +177,11 @@ ddc-vim: ## install deno
 	@echo '==> install deno'
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
-		if [ "$(printf '2.18\n'$(ldd --version | awk 'NR==1 { print $NF }')|sort -V|head -n 1)" = "2.18" ]; then \
+		if [ "$$(printf '2.18\n'$$(ldd --version | awk 'NR==1 { print $NF }')|sort -V|head -n 1)" = "2.18" ]; then \
 		curl -fsSL https://deno.land/x/install/install.sh | sh; \
 		else \
-		mkdir -p $(HOME)/.deno/bin; cd $(HOME)/.deno/bin; curl -L https://github.com/hayd/deno-lambda/releases/download/1.6.0/amz-deno.gz | gunzip -c;
-		fi;
+		mkdir -p $(HOME)/.deno/bin; curl -L https://github.com/hayd/deno-lambda/releases/download/1.6.0/amz-deno.gz | gunzip -c > $(HOME)/.deno/bin/deno; chmod +x $(HOME)/.deno/bin/deno; \
+		fi; \
 		ln -s $(HOME)/.deno/bin/deno $(HOME)/.local/bin
 
 .PHONY: clean
