@@ -7,7 +7,7 @@ let g:lightline = {
         \ 'mode_map': {'c': 'NORMAL'},
         \ 'active': {
         \   'left': [ [ 'mode', 'paste' ],
-        \             [ 'cocstatus', 'currentfunction', 'fugitive', 'filename', 'filepath' ],
+        \             [ 'fugitive', 'filename', 'filepath' ],
         \             [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_ok' ] ]
         \ },
         \ 'component_function': {
@@ -20,14 +20,8 @@ let g:lightline = {
         \   'filetype': 'LightlineFiletype',
         \   'fileencoding': 'LightlineFileencoding',
         \   'mode': 'LightlineMode',
-        \   'cocstatus': 'coc#status',
-        \   'currentfunction': 'CocCurrentFunction'
         \ }
         \ }
-
-function! CocCurrentFunction()
-  return get(b:, 'coc_current_function', '')
-endfunction
 
 function! LightlineModified()
   return &filetype =~? 'help\|vimfiler\|gundo' ? '' : &modified ? '+' : &modifiable ? '' : '-'

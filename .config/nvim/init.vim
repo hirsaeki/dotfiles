@@ -2,19 +2,22 @@
 
 augroup vimrc
   autocmd!
-augroup END set encoding=utf-8
+augroup END
+set encoding=utf-8
 scriptencoding utf-8
 set ambiwidth=double
-set termguicolors
 set pumblend=10
 
+if has('gui')
+  set termguicolors
+endif
+
 " set system python path
-" let g:python3_host_prog = '/usr/bin/python3'
 let g:python3_host_prog = expand('~/miniconda/envs/py3nvim/bin/python')
 let g:python_host_prog = expand('~/miniconda/envs/py2nvim/bin/python')
 
 "---------------------------------------------------------------------------
-:
+
 set fileencodings=utf-8,cp932,sjis,euc-jp,iso-2022-jp
 set fileformats=unix,mac,dos
 " neovim のターミナル実行時の表示くずれ対応
@@ -245,39 +248,35 @@ augroup MyAutoCmd
   autocmd CursorHold *.toml syntax sync minlines=300
 augroup END
 " dein settings {{{
-let g:dein#auto_recache = 0
-" dein自体の自動インストール
+" オートリキャッシュ設定
+let g:dein#auto_recache = 1
+" 設定
 let s:cache_home = empty($XDG_CACHE_HOME) ? expand('~/.cache') : $XDG_CACHE_HOME
 let s:config_home = empty($XDG_CONFIG_HOME) ? expand('~/.config') : $XDG_CONFIG_HOME
-" 
-if v:version < 800 || ! has('nvim')
-  let s:dein_clone = 'git clone --depth=1 -b 1.5 https://github.com/Shougo/dein.vim '  
-else
-  let s:dein_clone = 'git clone https://github.com/Shougo/dein.vim '  
+let s:dein_repo = '/repos/github.com/Shougo/dein.vim'
+let s:dein_dir = s:cache_home . '/dein'
+let g:dein_cfg = s:config_home . '/dein'
+let g:dein_plugin_rc = g:dein_cfg . '/plugins'
+let s:dein_toml = g:dein_cfg . '/dein.toml'
+let s:dein_lazy_toml = g:dein_cfg . '/dein_lazy.toml'
+if !isdirectory(s:dein_dir)
+  call system('curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh | bash -s -- ' . shellescape(s:dein_dir))
 endif
-if has('nyaovim')
-  let s:dein_dir = s:cache_home . '/nyaovim/dein'
-elseif has('nvim')
-  let s:dein_dir = s:cache_home . '/nvim/dein'
-else
-  let s:dein_dir = s:cache_home . '/vim/dein'
-endif
-let s:dein_repo_dir = s:dein_dir . '/repos/github.com/Shougo/dein.vim'
-if !isdirectory(s:dein_repo_dir)
-  call system(s:dein_clone . shellescape(s:dein_repo_dir))
-endif
-let &runtimepath = s:dein_repo_dir .','. &runtimepath
-  " プラグイン読み込み＆キャッシュ作成
-let g:toml_dir = s:config_home . '/dein.vim'
-let s:toml_file = g:toml_dir . '/dein.toml'
-let s:toml_lazy_file = g:toml_dir . '/dein_lazy.toml'
+execute 'set runtimepath+=' . s:dein_dir . s:dein_repo
+" プラグイン読み込み＆キャッシュ作成
 if dein#load_state(s:dein_dir)
   call dein#begin(s:dein_dir)
-  call dein#load_toml(s:toml_file, {'lazy' : 0})
-  call dein#load_toml(s:toml_lazy_file, {'lazy' : 1})
-
+  call dein#add('Shougo/dein.vim')
+  if !has('nvim')
+    call dein#add('roxma/nvim-yarp')
+    call dein#add('roxma/vim-hug-neovim-rpc')
+  endif
+  call dein#load_toml(s:dein_toml, {'lazy' : 0})
+  call dein#load_toml(s:dein_lazy_toml, {'lazy' : 1})
   call dein#end()
   call dein#save_state()
+  filetype plugin indent on
+  syntax enable
 endif
 " 不足プラグインの自動インストール
 if has('vim_starting') && dein#check_install()
@@ -306,30 +305,30 @@ augroup TransparentBG
   autocmd Colorscheme * highlight NonText ctermbg=none
   autocmd Colorscheme * highlight LineNr ctermbg=none
   autocmd Colorscheme * highlight Folded ctermbg=none
-  autocmd Colorscheme * highlight EndOfBuffer ctermbg=none 
+  autocmd Colorscheme * highlight EndOfBuffer ctermbg=none
+  autocmd Colorscheme * highlight Visual ctermbg=2
+  autocmd Colorscheme * highlight CursolColumn ctermbg=12 ctermfg=15
 augroup END
 
-" augroup vimrc-auto-mkdir  " {{{
-"   autocmd!
-"   autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
-"   function! s:auto_mkdir(dir, force)  " {{{
-"     if !isdirectory(a:dir) && (a:force ||
-"     \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
-"       call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
-"     endif
-"   endfunction  " }}}
-" augroup END  " }}}
+augroup vimrc-auto-mkdir  " {{{
+  autocmd!
+  autocmd BufWritePre * call s:auto_mkdir(expand('<afile>:p:h'), v:cmdbang)
+  function! s:auto_mkdir(dir, force)  " {{{
+    if !isdirectory(a:dir) && (a:force ||
+    \    input(printf('"%s" does not exist. Create? [y/N]', a:dir)) =~? '^y\%[es]$')
+      call mkdir(iconv(a:dir, &encoding, &termencoding), 'p')
+    endif
+  endfunction  " }}}
+augroup END  " }}}
 
 if has('win32') && !has('gui_running') 
-  colorscheme ap_dark8
+  silent! colorscheme ap_dark8
   hi Visual ctermfg=7 ctermbg=12
   hi LineNr ctermfg=9
   hi Pmenu  ctermfg=0 ctermbg=9
   hi Folded ctermfg=10
 else
-  let g:solarized_contrast = 'high'
-  let g:solarized_termtrans = 1
-  colorscheme solarized8
+  silent! colorscheme solarized
   if has('gui_running')
     set background=light
   else
@@ -350,12 +349,12 @@ set listchars=tab:>.,trail:_,eol:↲,extends:>,precedes:<,nbsp:%
 function! ZenkakuSpace()
     highlight ZenkakuSpace cterm=reverse ctermfg=DarkMagenta gui=reverse guifg=DarkMagenta
 endfunction
-   
+
 if has('syntax')
     augroup ZenkakuSpace
-        autocmd!
-        autocmd ColorScheme       * call ZenkakuSpace()
-        autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
+      autocmd!
+      autocmd ColorScheme       * call ZenkakuSpace()
+      autocmd VimEnter,WinEnter * match ZenkakuSpace /　/
     augroup END
     call ZenkakuSpace()
 endif

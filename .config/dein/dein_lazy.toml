@@ -1,0 +1,17 @@
+[[plugins]]
+repo = 'Shougo/ddc.vim'
+on_event = ['InsertEnter']
+hook_post_source = '''
+  execute 'source ' . g:dein_plugin_rc . '/ddc.rc.vim'
+'''
+[[plugins]]
+repo = 'Shougo/ddc-around'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-matcher_head'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-sorter_rank'
+on_source = 'ddc.vim'
