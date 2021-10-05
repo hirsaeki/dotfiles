@@ -14,16 +14,31 @@ inoremap <expr><S-TAB>  pumvisible() ? "\<C-p>" : "\<S-TAB>"
 inoremap <expr><C-g>       ddc#refresh_candidates()
 inoremap <silent><expr><C-l>      ddc#complete_common_string()
 
-call ddc#custom#patch_global('sources', ['around', 'nextword'])
+call ddc#custom#patch_global('sources', ['nvim-lsp', 'around', 'nextword', 'vsnip', 'file'])
 
 call ddc#custom#patch_global('sourceOptions', {
       \ 'around': {'mark': 'A'},
       \ 'nextword': {
       \   'mark': 'nextword',
       \ },
+      \ 'file': {
+      \   'mark': 'F',
+      \   'isVolatile': v:true,
+      \   'forceCompletionPattern': '\S/\S*',
+      \ },
+      \ 'nvim-lsp': {
+      \   'mark': 'LSP',
+      \   'forceCompletionPattern': '\.\w*|:\w*|->\w*',
+      \ },
       \ '_': {
       \   'matchers': ['matcher_head'],
-      \   'sorters': ['sorter_rank']},
+      \   'sorters': ['sorter_rank'],
+      \ },
+      \ })
+
+call ddc#custom#patch_global('sourceParams', {
+      \ 'around': {'maxsize': 500},
+      \ 'file': {'smartCase': v:true},
       \ })
 
 call ddc#enable()

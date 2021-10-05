@@ -19,3 +19,35 @@ on_source = 'ddc.vim'
 [[plugins]]
 repo = 'Shougo/ddc-nextword'
 on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'LumaKernel/ddc-file'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-nvim-lsp'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'matsui54/ddc-nvim-lsp-doc'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip'
+on_source = 'vim-vsnip-integ'
+
+[[plugins]]
+repo = 'hrsh7th/vim-vsnip-integ'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'neovim/nvim-lspconfig'
+
+[[plugins]]
+repo = 'williamboman/nvin-lsp-installer'
+on_event = 'BufEnter'
+depends = ['nvim-lspconfig']
+hook_source = '''
+  execute 'source ' . g:dein_plugin_rc . '/nvim-lsp-installer.rc.vim'
+'''
+
