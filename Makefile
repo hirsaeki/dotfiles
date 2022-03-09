@@ -10,7 +10,7 @@ dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
 appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I')
 CONDA_NVIM_ENVS := py2nvim^2 py3nvim^3
-CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch
+CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch openshift-cli kubernetes-client consul
 FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-agnoster jethrokuan/fzf
 TFENVS := 
 
