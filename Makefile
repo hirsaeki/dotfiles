@@ -91,7 +91,7 @@ conda-base: ## initialize base env via miniconda+conda-forge with essential pack
 	@[ ! -e $(HOME)/.config/tmux/plugins/tpm/tpm ] && eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && git clone $(GITHUB)/tmux-plugins/tpm $(HOME)/.config/tmux/plugins/tpm || :
 	@echo '==> setup powerline-status'
 	@echo ''
-	@for i in $$(find $(HOME)/miniconda/lib -path "*/powerline/bindings/tmux/__init__.py"); do \
+	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && for i in $$(find $(HOME)/miniconda/lib -path "*/powerline/bindings/tmux/__init__.py"); do \
 		patch --forward -fs $${i} < ./etc/powerline-status.patch || :; \
 		done;
 	@for i in $$(find $(HOME)/miniconda/lib -path "*/powerline/bindings/tmux/powerline.conf"); do \
