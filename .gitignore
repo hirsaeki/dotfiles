@@ -1,1 +1,5 @@
 .git/
+.dircolors
+.default_dotfiles.d
+orig/
+dircolor-solarized/

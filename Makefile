@@ -1,18 +1,16 @@
 SHELL      = /bin/bash
+PRESERVE   = default-dotfiles.d
 F_CAND     := .??*
 DIRS       := .local/bin .local/share/appimages
 F_EXCL     := .DS_Store .git .gitignore .gitmodules .travis.yml
 DOTPATH    = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 CANDIDATES = $(filter-out $(F_EXCL), $(wildcard $(F_CAND)))
 GITHUB     := https://github.com
-APPIMAGES  := neovim/neovim.nvim
 dot-split = $(word $2,$(subst ., ,$1))
 hat-split = $(word $2,$(subst ^, ,$1))
-appimage-subpath = $(shell curl -sL $(GITHUB)/$(call dot-split,$1,1)/releases/latest|grep -i "href.*$(call dot-split,$1,2).*\.appimage\""|grep -v -i -e "-rc-" -v -e "HEAD"|sort|tail -n 1|sed 's:.*/\(.*/.*\.appimage\).*:\1:I')
 CONDA_NVIM_ENVS := py2nvim^2 py3nvim^3
-CONDA_PKGS := git fish tmux powerline-status jq yq unzip patch fzf
-FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-agnoster jethrokuan/fzf
-NEXTWORD_TAG:= small
+CONDA_PKGS := neovim git fish tmux powerline-status jq yq unzip patch fzf deno natsort
+FISH_PLUGINS := danhper/fish-ssh-agent oh-my-fish/theme-bobthefish jethrokuan/fzf
 TFENVS := 
 
 .DEFAULT_GOAL := help
@@ -33,9 +31,9 @@ init: ## intialize dotfiles realpath
 	@echo '==> clone dircolors'
 	@echo ''
 	@test ! -d dircolor-solarized && mkdir -p dircolor-solarized && curl -sL $(GITHUB)/seebi/dircolors-solarized/archive/master.tar.gz| tar -xzf - -C dircolor-solarized --strip-component=1 --exclude='img' || :
-	@echo '==> set .dir_colors'
+	@echo '==> set .dircolors'
 	@echo ''
-	@cp dircolor-solarized/dircolors.256dark .dir_colors
+	@cp dircolor-solarized/dircolors.256dark .dircolors
 
 .PHONY: deploy
 deploy: ## ensure directories and create symlink to home directory
@@ -48,24 +46,15 @@ deploy: ## ensure directories and create symlink to home directory
 	@echo ''
 	@echo '==> preserve original dotfiles'
 	@echo ''
-	@mkdir -p $(HOME)/.default_dotfiles.d
-	@if [ -z "$$(ls -A $(HOME)/.default_dotfiles.d)" ]; then \
-		$(foreach val, $(CANDIDATES), if [ -L $(HOME)/$(val) ]; then unlink $(HOME)/$(val); elif [ -e $(HOME)/$(val) ]; then mv $(HOME)/$(val) $(HOME)/.default_dotfiles.d; fi;) \
+	@mkdir -p $(PRESERVE)
+	@mv $(HOME)/.bash* $(PRESERVE)
+	@if [ -z "$$(ls -A $(PRESERVE))" ]; then \
+		$(foreach val, $(CANDIDATES), [[ -L $(HOME)/$(val) ]] && unlink $(HOME)/$(val) || { [[ -e $(HOME)/$(val) ]] && mv $(HOME)/$(val) $(PRESERVE); };) \
 		else \
-		$(foreach val, $(CANDIDATES), [ -L $(HOME)/$(val) ] && unlink $(HOME)/$(val) || rm -rf $(HOME)/$(val);) \
+		$(foreach val, $(CANDIDATES), [[ -L $(HOME)/$(val) ]] && unlink $(HOME)/$(val) || rm -rf $(HOME)/$(val);) \
 		fi
+	@echo '==> create link for dotfiles'
 	@$(foreach val, $(CANDIDATES), ln -sfn $(realpath $(val)) $(HOME);)
-	@echo '==> install appimages from github'
-	@echo ''
-	@mkdir -p $(HOME)/.local/appimages
-	@$(foreach val, $(APPIMAGES), \
-		if ! type $(call dot-split,$(val),2) > /dev/null 2>&1; then \
-		echo '==> install $(call dot-split,$(val),1)'; \
-		echo '==> appimage is $(call appimage-subpath,$(val))'; \
-		curl -sL $(GITHUB)/$(call dot-split,$(val),1)/releases/download/$(call appimage-subpath,$(val)) -o $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) && \
-		chmod +x $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) && \
-		ln -sfn $(HOME)/.local/share/appimages/$(notdir $(call appimage-subpath,$(val))) $(HOME)/.local/bin/$(call dot-split,$(val),2); \
-		fi;)
 	@echo '==> install direnv.'
 	@echo ''
 	@source $(HOME)/.bash_profile && \
@@ -178,7 +167,7 @@ ddc-vim: ## install deno
 	@echo '==> install deno'
 	@echo ''
 	@eval "$$($(HOME)/miniconda/bin/conda shell.bash hook)" && \
-		if [ "$$(printf '2.18\n'$$(ldd --version | awk 'NR==1 { print $NF }')|sort -V|head -n 1)" = "2.18" ]; then \
+		if [ "$$(printf '2.18\n'$$(ldd --version | awk 'NR==1 { print $$NF }')|sort -V|head -n 1)" = "2.18" ]; then \
 		curl -fsSL https://deno.land/x/install/install.sh | sh; \
 		else \
 		mkdir -p $(HOME)/.deno/bin; curl -L https://github.com/hayd/deno-lambda/releases/download/1.6.0/amz-deno.gz | gunzip -c > $(HOME)/.deno/bin/deno; chmod +x $(HOME)/.deno/bin/deno; \
