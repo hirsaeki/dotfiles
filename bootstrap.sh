@@ -1,8 +1,4 @@
 #!/bin/bash
-echo '==> install gpg/pass'
-echo ''
-sudo apt-get -y install gnupg pass
-
 echo '==> install miniconda'
 echo ''
 if [[ ! -x ~/${CONDA_PATH:=miniconda3}/bin/conda ]]; then
