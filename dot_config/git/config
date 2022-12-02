@@ -1,0 +1,4 @@
+[merge]
+	ff = false
+[credential]
+	credentialStore = gpg

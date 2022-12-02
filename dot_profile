@@ -43,3 +43,9 @@ if type -P x2goagent 2> /dev/null ; then
   export GSETTINGS_SCHEMA_DIR=$XDG_DATA_DIRS
 fi
 
+# tty for GPG
+if [ "$SSH_TTY" == "" ]; then
+  if [ "$GPG_TTY" == "" ]; then
+    export GPG_TTY=$(tty)
+  fi
+fi
