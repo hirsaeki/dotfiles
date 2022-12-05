@@ -2,3 +2,6 @@
 	ff = false
 [credential]
 	credentialStore = gpg
+	helper = /home/hsaeki/.local/bin/git-credential-manager
+[credential "https://dev.azure.com"]
+	useHttpPath = true

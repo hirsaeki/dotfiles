@@ -29,7 +29,7 @@ if [ -f "$XDG_DATA_HOME"/mocword/mocword.sqlite ]; then
 fi
 
 # gnu password store
-if type -P pass; then
+if type -P pass > /dev/null 2>&1; then
   if [ -d "$XDG_DATA_HOME"/pass ]; then
     export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
   fi
