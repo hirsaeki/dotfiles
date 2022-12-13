@@ -50,5 +50,5 @@ echo '==> install git-credential-manager'
 echo ''
 if ! type -P git-credential-manager; then
   download_url=$(curl -sL https://api.github.com/repos/GitCredentialManager/git-credential-manager/releases/latest|awk -F\" '/browser_download.*linux_amd64.*tar\.gz"/ {print $4}')
-  curl -L "$download_url" | tar -xz -C ~/.local/bin
+  curl -L "$download_url" | tar -x -z -C ~/.local/bin
 fi
