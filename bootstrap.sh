@@ -18,8 +18,7 @@ conda update --all -y
 conda install -y neovim git wget fish trach-cli groff tmux binutils powerline-status jq yq unzip patch fzf deno natsort rust rust-std-x86_64-unknown-linux-gnu powerline-status bash-completion conda-bash-completion qrcode pillow
 conda clean --all -y
 
-echo '==> install chezmoi'
-echo ''
+eval "$(~/${CONDA_PATH:=miniconda3}/bin/conda shell.bash hook)"
 
 echo '==> install bitwarden cli'
 echo ''
