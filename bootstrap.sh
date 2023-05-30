@@ -53,7 +53,7 @@ while [[ -z "$BW_PASSWORD" ]]; do
   export BW_PASSWORD="$buf"
   unset buf
 done
-bw login ---apikey
+bw login --apikey
 export BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
 
 echo '==> install chezmoi'
