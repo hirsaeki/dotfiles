@@ -21,10 +21,10 @@ conda clean --all -y
 echo '==> install bitwarden cli'
 echo ''
 if ! type -P bw; then
-  tmp=$(mktemp -d)
-  cd $tmp
+  cd $(mktemp -d)
   curl -L "https://vault.bitwarden.com/download/?app=cli&platform=linux" -o bw.zip
   unzip bw.zip
+  mkdir -p ~/.local/bin
   install -t ~/.local/bin bw
   cd ~/
   rm -rf $tmp
@@ -53,6 +53,7 @@ while [[ -z "$BW_PASSWORD" ]]; do
   export BW_PASSWORD="$buf"
   unset buf
 done
+PATH=$PATH:$HOME/.local/bin
 bw login --apikey
 export BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
 
