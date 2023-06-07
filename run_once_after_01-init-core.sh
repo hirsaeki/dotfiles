@@ -7,6 +7,12 @@ echo ''
 conda init bash
 curl -fsSL "https://raw.githubusercontent.com/seebi/dircolors-solarized/master/dircolors.256dark" -o ~/.dircolors
 
+echo '==> install direnv'
+echo ''
+if ! type -P direnv; then
+  curl -fsSL https://direnv.net/install.sh | bash
+fi
+
 echo '==> setup fish'
 echo ''
 conda init fish
@@ -15,13 +21,6 @@ conda init fish
 /usr/bin/env fish -c "abbr -a vim nvim"
 /usr/bin/env fish -c "abbr -a vie nvim -u ~/.config/nvim/essential.nvim"
 /usr/bin/env fish -c "abbr -a rm trash-put"
-
-echo '==> install direnv'
-echo ''
-source ~/.bash_profile
-if ! type -P direnv; then
-  curl -fsSL https://direnv.net/install.sh | bash
-fi
 
 echo '==> create ~/Applications dir'
 echo ''
