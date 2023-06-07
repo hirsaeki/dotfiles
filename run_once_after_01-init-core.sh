@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ~/.bash_profile
 eval "$(~/${CONDA_PATH:=miniconda3}/bin/conda shell.bash hook)"
 echo '==> setup bash'
 echo ''
