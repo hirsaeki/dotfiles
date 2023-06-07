@@ -32,7 +32,7 @@ fi
 
 echo '==> login/unlock bitwarden'
 echo ''
-[[ -f bitwarden.sec ]] && source bitwarden.sec
+[[ -r secrets ]] && source secrets
 while [[ -z "$BW_CLIENTID" ]]; do
   printf 'input bitwarden client id(hidden): '
   read -s buf

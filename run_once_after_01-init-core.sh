@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source ~/.bash_profile
+
 eval "$(~/${CONDA_PATH:=miniconda3}/bin/conda shell.bash hook)"
 echo '==> setup bash'
 echo ''
@@ -29,7 +30,7 @@ mkdir -p ~/Applications
 echo '==> install neovim'
 echo ''
 if ! type nvim; then
-  download_url=$(curl -sL https://api.github.com/repos/neovim/neovim/releases/latest|awk -F\" '/browser_download.*appimage"/ {print $4}')
+  download_url=$(curl $GITHUB_CRED -sL https://api.github.com/repos/neovim/neovim/releases/latest|awk -F\" '/browser_download.*appimage"/ {print $4}')
   curl -o ~/Applications/nvim.appimage -L "$download_url"
   chmod +x ~/Applications/nvim.appimage 
   ln -s ~/Applications/nvim.appimage ~/.local/bin/nvim
@@ -37,18 +38,15 @@ fi
 
 echo '==> install gnu password store'
 echo ''
-if ! type -P pass; then
-  tmp=$(mktemp -d)
-  cd $tmp
+[[ -z $(type -P pass) ]] && (
+  cd $(mktemp -d)
   curl -L https://git.zx2c4.com/password-store/snapshot/password-store-master.tar.xz | tar -x -J 
   cd password-store-master && make install PREFIX=$HOME/.local
-  cd $HOME
-  rm -rf $tmp
-fi
+)
 
 echo '==> install git-credential-manager'
 echo ''
 if ! type -P git-credential-manager; then
-  download_url=$(curl -sL https://api.github.com/repos/GitCredentialManager/git-credential-manager/releases/latest|awk -F\" '/browser_download.*linux_amd64.*tar\.gz"/ {print $4}')
+  download_url=$(curl $GITHUB_CRED -sL https://api.github.com/repos/GitCredentialManager/git-credential-manager/releases/latest|awk -F\" '/browser_download_url.*linux_amd64.*[0-9][.]tar"/ {print $4}')
   curl -L "$download_url" | tar -x -z -C ~/.local/bin
 fi
