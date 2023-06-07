@@ -15,7 +15,7 @@ conda update conda -y
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda update --all -y
-conda install -y neovim git wget fish trash-cli groff tmux binutils powerline-status jq yq unzip patch fzf deno natsort rust rust-std-x86_64-unknown-linux-gnu powerline-status bash-completion conda-bash-completion qrcode pillow
+conda install -y neovim git wget fish trash-cli groff tmux binutils powerline-status jq yq unzip patch fzf deno natsort rust rust-std-x86_64-unknown-linux-gnu powerline-status bash-completion conda-bash-completion qrcode pillow bfg
 conda clean --all -y
 
 echo '==> install bitwarden cli'
@@ -32,6 +32,7 @@ fi
 
 echo '==> login/unlock bitwarden'
 echo ''
+[[ -f bitwarden.sec ]] && source bitwarden.sec
 while [[ -z "$BW_CLIENTID" ]]; do
   printf 'input bitwarden client id(hidden): '
   read -s buf
@@ -59,4 +60,4 @@ export BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
 
 echo '==> install chezmoi'
 echo ''
-sh -c "$(curl -fsSL git.io/chezmoi)" -- -b ~/.local/bin init --apply https://github.com/hirsaeki
+sh -c "$(curl -fsSL git.io/chezmoi)" -- -b ~/.local/bin init --apply hirsaeki

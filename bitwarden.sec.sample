@@ -1,0 +1,3 @@
+BW_CLIENTID=<your client id in webvault>
+BW_CLIENTSECRET=<your client secret in webvault>
+BW_PASSWORD=<your bitwarden password>
