@@ -55,6 +55,7 @@ while [[ -z "$BW_PASSWORD" ]]; do
   unset buf
 done
 PATH=$PATH:$HOME/.local/bin
+bw logout || :
 bw login --apikey
 export BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
 
