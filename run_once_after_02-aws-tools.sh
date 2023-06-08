@@ -51,3 +51,12 @@ echo ''
 if ! type -P aws-mfa; then
   pip install aws-mfa
 fi
+
+echo '==> install ssh_ec2 from github'
+echo ''
+[[ -z "$(type -P ssh_ec2)" ]]; && (
+  cd $(mktemp -d)
+  curl -OL https://raw.githubusercontent.com/hirsaeki-mki/ssh_ec2/master/ssh_ec2
+  install -t ~/.local/bin ssh_ec2
+)
+
