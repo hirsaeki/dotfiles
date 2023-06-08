@@ -55,9 +55,15 @@ while [[ -z "$BW_PASSWORD" ]]; do
   unset buf
 done
 PATH=$PATH:$HOME/.local/bin
-bw logout || :
 bw login --apikey
 export BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
+
+while [[ "$(bw list items)" == "[]" ]]; do
+  bw logout
+  sleep 2
+  bw login --apikey
+  BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
+done
 
 echo '==> install chezmoi'
 echo ''
