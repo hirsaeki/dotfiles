@@ -1,1 +1,1 @@
-{{ print "%s" (bitwarden "item" "sshpubkey").notes -}}
+{{ (bitwarden "item" "sshpubkey").notes | replace "\\n" "\n" -}}
