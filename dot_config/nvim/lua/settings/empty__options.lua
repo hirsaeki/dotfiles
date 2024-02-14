@@ -21,19 +21,17 @@ local options = {
   showmatch = true,
   wildmenu = true,
   wildmode = "list:longest",
-  formatoptions+ = "mM",
   hidden = true,
   autoread = true,
   number = true,
   ruler = true,
   nolist = true,
-  listchars = "tab:>-,extends:<,trail:-,eol:<",
   wrap = true,
   laststatus = 2,
   cmdheight = 1,
   showcmd = true,
   title = true,
-  backupext = .bak,
+  backupext = ".bak",
   undofile = true,
   scrolloff = 999,
   foldmethod = "marker",
@@ -48,6 +46,7 @@ local options = {
 }
 
 vim.opt.shortmess:append("c")
+vim.opt.formatoptions:append("mM")
 
 for k, v in pairs(options) do
   vim.opt[k] = v

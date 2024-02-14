@@ -30,23 +30,17 @@ mkdir -p ~/Applications
 echo '==> install neovim'
 echo ''
 if ! type nvim; then
-  download_url=$(curl $GITHUB_CRED --retry 3 -sL https://api.github.com/repos/neovim/neovim/releases/latest|awk -F\" '/browser_download.*appimage"/ {print $4}')
-  curl -o ~/Applications/nvim.appimage -L "$download_url"
-  chmod +x ~/Applications/nvim.appimage 
+  repo="https://github.com/neovim/neovim/releases"
+  latest_ver=$(curl -Ls "${repo}/latest" -o /dev/null -w %{url_effective} | grep -oP "[^/]*$")
+  curl -o ~/Applications/nvim.appimage -L "${repo}/download/${latest_ver}/nvim.appimage"
+  chmod u+x ~/Applications/nvim.appimage 
   ln -s ~/Applications/nvim.appimage ~/.local/bin/nvim
 fi
-
-echo '==> install gnu password store'
-echo ''
-[[ -z $(type -P pass) ]] && (
-  cd $(mktemp -d)
-  curl -L https://git.zx2c4.com/password-store/snapshot/password-store-master.tar.xz | tar -x -J 
-  cd password-store-master && make install PREFIX=$HOME/.local
-)
 
 echo '==> install git-credential-manager'
 echo ''
 if ! type -P git-credential-manager; then
-  download_url=$(curl $GITHUB_CRED --retry 3 -sL https://api.github.com/repos/GitCredentialManager/git-credential-manager/releases/latest|awk -F\" '/browser_download_url.*linux_amd64.*[0-9][.]tar/ {print $4}')
-  curl -L "$download_url" | tar -x -z -C ~/.local/bin
+  repo="https://github.com/git-ecosystem/git-credential-manager/releases"
+  latest_ver=$(curl -Ls "${repo}/latest" -o /dev/null -w %{url_effective} | grep -oP "[^/]*$")
+  curl -L "${repo}/download/${latest_ver}/gcm-linux_amd64.${latest_ver#v}.tar.gz" | tar -x -z -C ~/.local/bin
 fi

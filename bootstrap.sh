@@ -15,54 +15,30 @@ conda update conda -y
 conda config --add channels conda-forge
 conda config --set channel_priority strict
 conda update --all -y
-conda install -y neovim make git wget fish trash-cli groff tmux binutils powerline-status jq yq unzip patch fzf deno natsort rust rust-std-x86_64-unknown-linux-gnu powerline-status bash-completion conda-bash-completion qrcode pillow bfg
+conda install -y neovim make gcc git wget fish trash-cli groff tmux binutils powerline-status unzip patch fzf deno rust rust-std-x86_64-unknown-linux-gnu powerline-status bash-completion conda-bash-completion
 conda clean --all -y
 
-echo '==> install bitwarden cli'
+echo '==> install and login rbw bitwarden cli(unofficial)'
 echo ''
-if ! type -P bw; then
-  cd $(mktemp -d)
-  curl -L "https://vault.bitwarden.com/download/?app=cli&platform=linux" -o bw.zip
-  unzip bw.zip
-  mkdir -p ~/.local/bin
-  install -t ~/.local/bin bw
-  cd ~/
-  rm -rf $tmp
-fi
-
-echo '==> login/unlock bitwarden'
+echo '==> set cargo home and add path'
 echo ''
-[[ -r secrets ]] && source secrets
-while [[ -z "$BW_CLIENTID" ]]; do
-  printf 'input bitwarden client id(hidden): '
-  read -s buf
-  printf '\n'
-  export BW_CLIENTID="$buf"
-  unset buf
-done
-while [[ -z "$BW_CLIENTSECRET" ]]; do
-  printf 'input bitwarden client secret(hidden): '
-  read -s buf
-  printf '\n'
-  export BW_CLIENTSECRET="$buf"
-  unset buf
-done
-while [[ -z "$BW_PASSWORD" ]]; do
-  printf 'input bitwarden master password(hidden): '
-  read -s buf
-  printf '\n'
-  export BW_PASSWORD="$buf"
-  unset buf
-done
-PATH=$PATH:$HOME/.local/bin
-bw login --apikey
-export BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
+CARGO_HOME="~/.local/cargo"
+PATH="$GARGO_HOME"/bin:"$PATH"
+echo '==> install rbw via cargo'
+echo ''
+cargo install rbw
 
-while [[ "$(bw list items)" == "[]" ]]; do
-  bw logout
-  sleep 2
-  bw login --apikey
-  BW_SESSION=$(bw unlock --raw --passwordenv BW_PASSWORD)
+echo '==> login to bitwarden'
+echo ''
+while true; do
+  read -p 'input bitwarden login email: ' bwemail
+  rbw config set email "$bwemail"
+  if rbw login; then
+    echo "login succeeded."
+    break
+  else
+    echo "retry login bitwarden"
+  fi
 done
 
 echo '==> install chezmoi'
