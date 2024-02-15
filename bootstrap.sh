@@ -23,7 +23,6 @@ echo ''
 echo '==> set cargo home and add path'
 echo ''
 export CARGO_HOME="$HOME"/.local/cargo
-export PATH="$GARGO_HOME"/bin:"$PATH"
 echo '==> install rbw via cargo'
 echo ''
 cargo install rbw
@@ -32,8 +31,8 @@ echo '==> login to bitwarden'
 echo ''
 while true; do
   read -p 'input bitwarden login email: ' bwemail
-  rbw config set email "$bwemail"
-  if rbw login; then
+  PATH="$GARGO_HOME"/bin:"$PATH" rbw config set email "$bwemail"
+  if PATH="$GARGO_HOME"/bin:"$PATH" rbw login; then
     echo "login succeeded."
     break
   else
