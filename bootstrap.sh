@@ -22,7 +22,7 @@ echo '==> install and login rbw bitwarden cli(unofficial)'
 echo ''
 echo '==> set cargo home and add path'
 echo ''
-export CARGO_HOME="~/.local/cargo"
+export CARGO_HOME="$HOME"/.local/cargo
 export PATH="$GARGO_HOME"/bin:"$PATH"
 echo '==> install rbw via cargo'
 echo ''
